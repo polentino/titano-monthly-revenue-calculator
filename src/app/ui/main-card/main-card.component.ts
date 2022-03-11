@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {HowItWorksComponent} from "../how-it-works/how-it-works.component";
+import {BuyMeABeerComponent} from "../buy-me-a-beer/buy-me-a-beer.component";
 
 @Component({
   selector: 'app-main-card',
@@ -11,8 +12,7 @@ export class MainCardComponent implements OnInit {
 
   desiredMonthlyWithdraw: number = 1000;
   initialTitanoCapital: number = 2000;
-  titanoPrice: number = 0.161648;
-  // titanoPrice: number = 0.148245;
+  titanoPrice: number = 0.157907;
   feesPercentage: number = 18;
   taxesPercentage: number = 30;
   dateFormat = 'dd MMMM YYYY';
@@ -69,6 +69,9 @@ export class MainCardComponent implements OnInit {
     this.dialog.open(HowItWorksComponent);
   }
 
+  openBuyMeABeerDialog() {
+    this.dialog.open(BuyMeABeerComponent);
+  }
 
   ngOnInit(): void {
   }

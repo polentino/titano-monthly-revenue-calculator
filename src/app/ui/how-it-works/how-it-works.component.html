@@ -1,15 +1,14 @@
 <h2 mat-dialog-title>How it Works?</h2>
 <mat-dialog-content>
-  <div>
-    This simple app computes the day when you can start profit-taking from your TITANO holdings, given some inputs like
-    the initial wallet amount, desired monthly amount you want to take, slippage fees and taxes.
-  </div>
-  <div>
-    The idea behind this is to calculate from which point in time you can start having rebases that, on average, will
-    sum up to the desired profit taking amount (plus fees & taxes) oveer a month. But since it's an average, and the
-    real autocompound formula does actually increase (*), every month you'll end up with "a little more" than what you
-    would need to withdraw your desired sum. Thus, the balance in your wallet will still grow!
-  </div>
+  <p>
+    Given some inputs like your initial TITANOs holdings in your wallet, desired monthly take-profit amount, slippage
+    fees and taxes, this page will compute the date from which you'll be able to withdraw your preconfigured take-profit
+    amount AND have enough "critical mass" of TITANOs left to be self-sustainable, every month.
+  </p>
+  <p>
+    ⚠️NOTE⚠️ This calculation works under the assumption that TITANO price will be the pretty much constant; in
+    future releases I might as well add an extra parameter to take that into account.
+  </p>
   <cite>(*)<b>assuming TITANO price will NOT drop</b></cite>
 
 </mat-dialog-content>
