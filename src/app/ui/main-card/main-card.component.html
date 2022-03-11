@@ -31,10 +31,10 @@
       by {{totalTitanoBalance(daysNeeded()) - monthlyTitanoWithdrawal() | numberFormat}} Titano 🎉
     </div>
     <br/>
-
   </mat-card-content>
+
   <mat-card-actions>
-    <button mat-button>LIKE</button>
+    <button mat-button (click)="openHowItWorksDialog()">HOW IT WORKS</button>
     <button mat-button>SHARE</button>
   </mat-card-actions>
 </mat-card>

@@ -9,18 +9,22 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {FormsModule} from "@angular/forms";
 import {NumberFormatPipe} from "./ui/pipes/number-format-pipe";
+import { HowItWorksComponent } from './ui/how-it-works/how-it-works.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
     AppComponent,
     MainCardComponent,
-    NumberFormatPipe
+    NumberFormatPipe,
+    HowItWorksComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatCardModule,
     MatButtonModule,
+    MatDialogModule,
     MatDividerModule,
     FormsModule
   ],

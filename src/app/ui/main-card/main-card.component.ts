@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {MatDialog} from "@angular/material/dialog";
+import {HowItWorksComponent} from "../how-it-works/how-it-works.component";
 
 @Component({
   selector: 'app-main-card',
@@ -18,7 +20,7 @@ export class MainCardComponent implements OnInit {
   halfHourAPY = 0.0003958; // from Titano website
   daylyCompoundPeriods = 48;
 
-  constructor() {
+  constructor(public dialog: MatDialog) {
   }
 
   monthlyTitanoWithdrawal() {
@@ -55,12 +57,18 @@ export class MainCardComponent implements OnInit {
 
   totalTitanoBalance(days: number) {
     // copy/paste this formula in google to see the result by yourself: 1000 * (1 + 0,0003958)^(48*day)
+    // taken from https://www.investopedia.com/terms/c/compoundinterest.asp
     return this.initialTitanoCapital * Math.pow(1 + this.halfHourAPY, this.daylyCompoundPeriods * days);
   }
 
   totalTitanoRevenue(days: number) {
     return this.totalTitanoBalance(days) - this.initialTitanoCapital;
   }
+
+  openHowItWorksDialog() {
+    this.dialog.open(HowItWorksComponent);
+  }
+
 
   ngOnInit(): void {
   }
