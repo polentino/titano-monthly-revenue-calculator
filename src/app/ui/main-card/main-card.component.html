@@ -1,0 +1,41 @@
+<mat-card>
+  <mat-card-title>Titano Monthly Revenue Calculator</mat-card-title>
+  <mat-card-subtitle>Helps you estimate monthly profit taking in a sustainable manner.</mat-card-subtitle>
+  <mat-card-content>
+    <div>Every month, I would like to take profit for <input [(ngModel)]="desiredMonthlyWithdraw"/> Euro.</div>
+    <div>
+      My wallet contains <input [(ngModel)]="initialTitanoCapital"/> Titano, with current price of <input
+      [(ngModel)]="titanoPrice"/> Euro/Titano.
+    </div>
+    <div>
+      I assume slippage fees of <input [(ngModel)]="feesPercentage"/> % and taxes around <input
+      [(ngModel)]="taxesPercentage"/> %.
+    </div>
+    <mat-divider></mat-divider>
+
+    <br/>
+    <div>
+      With a wallet containing, as of today, {{initialTitanoCapital}} Titano, if you want to
+      withdraw {{desiredMonthlyWithdraw}}€/Month <b>after slippage & taxes</b>,
+      meaning {{monthlyTitanoWithdrawal() | numberFormat}} Titano/Month gross, you will need to wait
+      until {{startDate() | date: dateFormat}} , that is, <b>{{daysNeeded()}} days from today </b>.
+    </div>
+    <div>
+      From {{startDate() | date: dateFormat}}, you'll be able to withdraw {{desiredMonthlyWithdraw}}€ every month and
+      still be able to increase your Titano holdings!
+    </div>
+    <div>
+      To be precise, your Titano holdings on {{startDate() | date: dateFormat}} will
+      be {{totalTitanoBalance(daysNeeded()) | numberFormat}} Titano but, since you'd need to withdraw
+      only {{monthlyTitanoWithdrawal() | numberFormat}} of them, your wallet will still increase
+      by {{totalTitanoBalance(daysNeeded()) - monthlyTitanoWithdrawal() | numberFormat}} Titano 🎉
+    </div>
+    <br/>
+
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button>LIKE</button>
+    <button mat-button>SHARE</button>
+  </mat-card-actions>
+</mat-card>
+
