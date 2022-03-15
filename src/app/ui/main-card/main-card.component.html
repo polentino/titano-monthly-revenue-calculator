@@ -2,7 +2,25 @@
   <mat-card-title>Titano Monthly Revenue Calculator</mat-card-title>
   <mat-card-subtitle>Helps you estimate monthly profit taking in a sustainable way</mat-card-subtitle>
   <mat-card-content>
-    <label>I would like to take profit for <input [(ngModel)]="desiredMonthlyWithdraw"/> Euro every month.</label>
+    <div class="small-chips-main">
+      <div>
+        <label>I would like to take profit for <input [(ngModel)]="desiredPeriodicWithdraw"/></label> Euro every
+      </div>
+      <div style="display: flex" class="small-chips">
+        <mat-chip-list aria-label="Select withdrawal period">
+          <mat-chip color="primary"
+                    [selected]="monthlyWithdraw"
+                    (click)="monthlyWithdraw = !monthlyWithdraw">month
+          </mat-chip>
+          <mat-chip color="primary"
+                    [selected]="!monthlyWithdraw"
+                    (click)="monthlyWithdraw = !monthlyWithdraw">week
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+      .
+    </div>
+    <div>.</div>
     <label>
       My wallet contains <input [(ngModel)]="initialTitanoCapital"/>
     </label>
@@ -25,8 +43,8 @@
 
         <p>
           As of today, with a wallet containing {{initialTitanoCapital}} Titano, if you want to
-          withdraw {{desiredMonthlyWithdraw}}€/Month <b>after slippage & taxes</b>,
-          meaning {{monthlyTitanoWithdrawal() | numberFormat}} Titano/Month gross, you will need to wait
+          withdraw {{desiredPeriodicWithdraw}}€/{{monthlyWithdraw ? "Month" : "Week"}} <b>after slippage & taxes</b>,
+          meaning {{periodicTitanoWithdrawal() | numberFormat}} Titano/{{monthlyWithdraw ? "Month" : "Week"}} gross, you will need to wait
           until <b>{{startDate() | date: dateFormat}}</b>, that is, <b>{{daysNeeded()}} days from today </b>.
         </p>
       </mat-expansion-panel>
@@ -36,14 +54,14 @@
           <mat-panel-title>Analysis Details</mat-panel-title>
         </mat-expansion-panel-header>
         <p>
-          From {{startDate() | date: dateFormat}}, you'll be able to withdraw {{desiredMonthlyWithdraw}}€ every month
+          From {{startDate() | date: dateFormat}}, you'll be able to withdraw {{desiredPeriodicWithdraw}}€/{{monthlyWithdraw ? "Month" : "Week"}}
           and
           still be able to increase your Titano holdings!
         </p>
         <p>
           To be precise, on that day your wallet will contain {{totalTitanoBalance(daysNeeded()) | numberFormat}} Titano
-          but, since you'd need to withdraw only {{monthlyTitanoWithdrawal() | numberFormat}} of them, your wallet will
-          still increase by {{totalTitanoBalance(daysNeeded()) - monthlyTitanoWithdrawal() | numberFormat}} Titano 🎉
+          but, since you'd need to withdraw only {{periodicTitanoWithdrawal() | numberFormat}} of them, your wallet will
+          still increase by {{totalTitanoBalance(daysNeeded()) - periodicTitanoWithdrawal() | numberFormat}} Titano 🎉
         </p>
       </mat-expansion-panel>
     </mat-accordion>

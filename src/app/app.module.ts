@@ -15,6 +15,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatIconModule} from "@angular/material/icon";
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
     FormsModule,
     MatExpansionModule,
     MatIconModule,
-    ClipboardModule
+    ClipboardModule,
+    MatChipsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

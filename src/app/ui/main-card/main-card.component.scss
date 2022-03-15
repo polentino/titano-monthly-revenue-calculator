@@ -1,0 +1,18 @@
+.small-chips-main {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .small-chips {
+    display: contents !important;
+  }
+
+  mat-chip {
+    min-height: unset;
+  }
+
+  mat-chip:first-child {
+    margin-left: 10px;
+  }
+}
