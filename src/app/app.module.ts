@@ -16,6 +16,9 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatIconModule} from "@angular/material/icon";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {MatChipsModule} from "@angular/material/chips";
+import {CoinMarketCapService} from "./services/CoinMarketCapService";
+import {HttpClientModule} from "@angular/common/http";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -28,6 +31,7 @@ import {MatChipsModule} from "@angular/material/chips";
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     MatCardModule,
     MatButtonModule,
     MatDialogModule,
@@ -36,9 +40,10 @@ import {MatChipsModule} from "@angular/material/chips";
     MatExpansionModule,
     MatIconModule,
     ClipboardModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [CoinMarketCapService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

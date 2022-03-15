@@ -2,11 +2,14 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {HowItWorksComponent} from "../how-it-works/how-it-works.component";
 import {BuyMeABeerComponent} from "../buy-me-a-beer/buy-me-a-beer.component";
+import {CMCQuoteDataPoint, CoinMarketCapService} from "../../services/CoinMarketCapService";
+import {CoinMarketCapCurrencies} from "../../services/CoinMarketCapCurrencies";
 
 @Component({
   selector: 'app-main-card',
   templateUrl: './main-card.component.html',
-  styleUrls: ['./main-card.component.scss']
+  styleUrls: ['./main-card.component.scss'],
+  providers: [CoinMarketCapService]
 })
 export class MainCardComponent implements OnInit {
 
@@ -17,11 +20,23 @@ export class MainCardComponent implements OnInit {
   feesPercentage: number = 18;
   taxesPercentage: number = 30;
   dateFormat = 'dd MMMM YYYY';
+  //
+  currencies = CoinMarketCapCurrencies.CURRENCIES;
+  currency = this.currencies[9];
 
   halfHourAPY = 0.0003958; // from Titano website
   daylyCompoundPeriods = 48;
 
-  constructor(public dialog: MatDialog) {
+  constructor(private cmcService: CoinMarketCapService, private dialog: MatDialog) {
+    this.fetchQuote();
+  }
+
+  fetchQuote() {
+    this.cmcService.getQuote(this.currency)
+      .subscribe(data => {
+        // todo ensure we catch errors!
+        this.titanoPrice = Object.values(data.data.points).pop().v[0];
+      });
   }
 
   periodicTitanoWithdrawal() {

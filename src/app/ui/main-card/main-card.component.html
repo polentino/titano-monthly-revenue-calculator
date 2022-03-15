@@ -4,7 +4,12 @@
   <mat-card-content>
     <div class="small-chips-main">
       <div>
-        <label>I would like to take profit for <input [(ngModel)]="desiredPeriodicWithdraw" type="number" min="0"/></label> Euro every
+        <label>I would like to take profit for <input [(ngModel)]="desiredPeriodicWithdraw" type="number"
+                                                      min="0"/></label>
+        <mat-select [(value)]="currency">
+          <mat-option *ngFor="let c of currencies" [value]="c" (onSelectionChange)="fetchQuote()">{{c.symbol}}</mat-option>
+        </mat-select>
+        every
       </div>
       <div style="display: flex" class="small-chips">
         <mat-chip-list aria-label="Select withdrawal period">
@@ -20,12 +25,11 @@
       </div>
       .
     </div>
-    <div>.</div>
     <label>
       My wallet contains <input [(ngModel)]="initialTitanoCapital" type="number" min="0"/>
     </label>
     <label>
-      Titano, with current price of <input [(ngModel)]="titanoPrice" type="number" min="0"/> Euro/Titano.
+      Titano, with current price of <input [(ngModel)]="titanoPrice" type="number" min="0"/> {{this.currency.symbol}}/Titano.
     </label>
     <label>
       I assume slippage fees of <input [(ngModel)]="feesPercentage" type="number" min="0" max="100"/>(%)
@@ -43,8 +47,9 @@
 
         <p>
           As of today, with a wallet containing {{initialTitanoCapital}} Titano, if you want to
-          withdraw {{desiredPeriodicWithdraw}}€/{{monthlyWithdraw ? "Month" : "Week"}} <b>after slippage & taxes</b>,
-          meaning {{periodicTitanoWithdrawal() | numberFormat}} Titano/{{monthlyWithdraw ? "Month" : "Week"}} gross, you will need to wait
+          withdraw {{desiredPeriodicWithdraw}} {{currency.symbol}}/{{monthlyWithdraw ? "Month" : "Week"}} <b>after slippage & taxes</b>,
+          meaning {{periodicTitanoWithdrawal() | numberFormat}} Titano/{{monthlyWithdraw ? "Month" : "Week"}} gross, you
+          will need to wait
           until <b>{{startDate() | date: dateFormat}}</b>, that is, <b>{{daysNeeded()}} days from today </b>.
         </p>
       </mat-expansion-panel>
@@ -54,7 +59,8 @@
           <mat-panel-title>Analysis Details</mat-panel-title>
         </mat-expansion-panel-header>
         <p>
-          From {{startDate() | date: dateFormat}}, you'll be able to withdraw {{desiredPeriodicWithdraw}}€/{{monthlyWithdraw ? "Month" : "Week"}}
+          From {{startDate() | date: dateFormat}}, you'll be able to withdraw {{desiredPeriodicWithdraw}}
+          €/{{monthlyWithdraw ? "Month" : "Week"}}
           and
           still be able to increase your Titano holdings!
         </p>

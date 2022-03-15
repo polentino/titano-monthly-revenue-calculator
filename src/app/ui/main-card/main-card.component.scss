@@ -8,6 +8,11 @@
     display: contents !important;
   }
 
+  .mat-select {
+    margin-left: 10px;
+    width: 60px;
+  }
+
   mat-chip {
     min-height: unset;
   }
