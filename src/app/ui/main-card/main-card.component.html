@@ -4,7 +4,7 @@
   <mat-card-content>
     <div class="small-chips-main">
       <div>
-        <label>I would like to take profit for <input [(ngModel)]="desiredPeriodicWithdraw"/></label> Euro every
+        <label>I would like to take profit for <input [(ngModel)]="desiredPeriodicWithdraw" type="number" min="0"/></label> Euro every
       </div>
       <div style="display: flex" class="small-chips">
         <mat-chip-list aria-label="Select withdrawal period">
@@ -22,16 +22,16 @@
     </div>
     <div>.</div>
     <label>
-      My wallet contains <input [(ngModel)]="initialTitanoCapital"/>
+      My wallet contains <input [(ngModel)]="initialTitanoCapital" type="number" min="0"/>
     </label>
     <label>
-      Titano, with current price of <input [(ngModel)]="titanoPrice"/> Euro/Titano.
+      Titano, with current price of <input [(ngModel)]="titanoPrice" type="number" min="0"/> Euro/Titano.
     </label>
     <label>
-      I assume slippage fees of <input [(ngModel)]="feesPercentage"/>(%)
+      I assume slippage fees of <input [(ngModel)]="feesPercentage" type="number" min="0" max="100"/>(%)
     </label>
     <label>
-      and taxes around <input [(ngModel)]="taxesPercentage"/>(%).
+      and taxes around <input [(ngModel)]="taxesPercentage" type="number" min="0" max="100"/>(%).
     </label>
     <p></p>
 
