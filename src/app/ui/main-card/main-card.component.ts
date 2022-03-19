@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {HowItWorksComponent} from "../how-it-works/how-it-works.component";
-import {BuyMeABeerComponent} from "../buy-me-a-beer/buy-me-a-beer.component";
-import {CMCQuoteDataPoint, CoinMarketCapService} from "../../services/CoinMarketCapService";
 import {CoinMarketCapCurrencies} from "../../services/CoinMarketCapCurrencies";
+import { CoinMarketCapService} from "../../services/CoinMarketCapService";
+import {BuyMeABeerComponent} from "../buy-me-a-beer/buy-me-a-beer.component";
+import {HowItWorksComponent} from "../how-it-works/how-it-works.component";
 
 @Component({
   selector: 'app-main-card',
@@ -11,14 +11,14 @@ import {CoinMarketCapCurrencies} from "../../services/CoinMarketCapCurrencies";
   styleUrls: ['./main-card.component.scss'],
   providers: [CoinMarketCapService]
 })
-export class MainCardComponent implements OnInit {
+export class MainCardComponent {
 
   monthlyWithdraw = true;
-  desiredPeriodicWithdraw: number = 1000;
-  initialTitanoCapital: number = 2000;
-  titanoPrice: number = 0.157907;
-  feesPercentage: number = 18;
-  taxesPercentage: number = 30;
+  desiredPeriodicWithdraw = 1000;
+  initialTitanoCapital = 2000;
+  titanoPrice = 0.157907;
+  feesPercentage = 18;
+  taxesPercentage = 30;
   dateFormat = 'dd MMMM YYYY';
   //
   currencies = CoinMarketCapCurrencies.CURRENCIES;
@@ -91,8 +91,5 @@ export class MainCardComponent implements OnInit {
 
   openBuyMeABeerDialog() {
     this.dialog.open(BuyMeABeerComponent);
-  }
-
-  ngOnInit(): void {
   }
 }

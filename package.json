@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "lint": "npx eslint ./src/ --fix",
     "build": "ng build --aot --base-href='/titano-monthly-revenue-calculator/'",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -30,6 +31,12 @@
     "@angular/compiler-cli": "~13.2.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint": "^8.11.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-sort-import": "^1.0.7",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "jasmine-core": "~4.0.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
