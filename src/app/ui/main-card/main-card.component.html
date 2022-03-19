@@ -6,8 +6,8 @@
       <div>
         <label>I would like to take profit for <input [(ngModel)]="desiredPeriodicWithdraw" type="number"
                                                       min="0"/></label>
-        <mat-select [(value)]="currency">
-          <mat-option *ngFor="let c of currencies" [value]="c" (onSelectionChange)="fetchQuote()">{{c.symbol}}</mat-option>
+        <mat-select [(value)]="currency" (selectionChange)="fetchQuote()">
+          <mat-option *ngFor="let c of currencies" [value]="c">{{c.symbol}}</mat-option>
         </mat-select>
         every
       </div>

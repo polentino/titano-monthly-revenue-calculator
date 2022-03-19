@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -8,13 +8,14 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class BuyMeABeerComponent {
 
-  constructor(private _snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar) {
+  }
 
   getAddress() {
     return "0x26b9ee3E56E11D740347738825e5e8c6940cF1aA";
   }
 
   sayThankYou() {
-    this._snackBar.open("Address copied, thank you!", "Close", {duration: 5000});
+    this.snackBar.open("Address copied, thank you!", "Close", {duration: 5000});
   }
 }

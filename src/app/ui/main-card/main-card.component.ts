@@ -1,7 +1,8 @@
 import {Component} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 import {CoinMarketCapCurrencies} from "../../services/CoinMarketCapCurrencies";
-import { CoinMarketCapService} from "../../services/CoinMarketCapService";
+import {CoinMarketCapService} from "../../services/CoinMarketCapService";
 import {BuyMeABeerComponent} from "../buy-me-a-beer/buy-me-a-beer.component";
 import {HowItWorksComponent} from "../how-it-works/how-it-works.component";
 
@@ -27,16 +28,22 @@ export class MainCardComponent {
   halfHourAPY = 0.0003958; // from Titano website
   daylyCompoundPeriods = 48;
 
-  constructor(private cmcService: CoinMarketCapService, private dialog: MatDialog) {
-    this.fetchQuote();
+  constructor(private cmcService: CoinMarketCapService, private dialog: MatDialog, private snackBar: MatSnackBar) {
   }
 
   fetchQuote() {
-    this.cmcService.getQuote(this.currency)
+    const c = this.currency;
+    this.cmcService.getQuote(c)
       .subscribe(data => {
-        // todo ensure we catch errors!
-        this.titanoPrice = Object.values(data.data.points).pop().v[0];
-      });
+          // todo ensure we catch errors!
+        const price = Object.values(data.data.points).pop().v[0];
+          console.log(`1${c.symbol} = ${price}TITANO`);
+          this.titanoPrice = price;
+        },
+        error => {
+          console.error(error);
+          this.snackBar.open("Couldn't fetch TITANO quote; please insert it manually", "Ok", {duration: 5000});
+        });
   }
 
   periodicTitanoWithdrawal() {
