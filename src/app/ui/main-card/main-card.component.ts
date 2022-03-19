@@ -36,7 +36,7 @@ export class MainCardComponent {
     this.cmcService.getQuote(c)
       .subscribe(data => {
           // todo ensure we catch errors!
-        const price = Object.values(data.data.points).pop().v[0];
+          const price = Object.values(data.data.points).pop().v[0];
           console.log(`1${c.symbol} = ${price}TITANO`);
           this.titanoPrice = price;
         },
