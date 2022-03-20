@@ -29,7 +29,8 @@
       My wallet contains <input [(ngModel)]="initialTitanoCapital" type="number" min="0"/>
     </label>
     <label>
-      Titano, with current price of <input [(ngModel)]="titanoPrice" type="number" min="0"/> {{this.currency.symbol}}/Titano.
+      Titano, with current price of <input [(ngModel)]="titanoPrice" type="number" min="0"/> {{this.currency.symbol}}
+      /Titano.
     </label>
     <label>
       I assume slippage fees of <input [(ngModel)]="feesPercentage" type="number" min="0" max="100"/>(%)
@@ -47,28 +48,109 @@
 
         <p>
           As of today, with a wallet containing {{initialTitanoCapital}} Titano, if you want to
-          withdraw {{desiredPeriodicWithdraw}} {{currency.symbol}}/{{monthlyWithdraw ? "Month" : "Week"}} <b>after slippage & taxes</b>,
+          withdraw {{desiredPeriodicWithdraw}} {{currency.symbol}}/{{monthlyWithdraw ? "Month" : "Week"}} <b>after
+          slippage & taxes</b>,
           meaning {{periodicTitanoWithdrawal() | numberFormat}} Titano/{{monthlyWithdraw ? "Month" : "Week"}} gross, you
           will need to wait
-          until <b>{{startDate() | date: dateFormat}}</b>, that is, <b>{{daysNeeded()}} days from today </b>.
+          until <b>{{firstWithdrawalDate() | date: dateFormat}}</b>, that is, <b>{{daysNeeded()}} days from today </b>.
         </p>
       </mat-expansion-panel>
 
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title>Analysis Details</mat-panel-title>
+          <mat-panel-title>1Yr Profit and Wallet breakdown</mat-panel-title>
         </mat-expansion-panel-header>
-        <p>
-          From {{startDate() | date: dateFormat}}, you'll be able to withdraw {{desiredPeriodicWithdraw}}
-          €/{{monthlyWithdraw ? "Month" : "Week"}}
-          and
-          still be able to increase your Titano holdings!
-        </p>
-        <p>
-          To be precise, on that day your wallet will contain {{totalTitanoBalance(daysNeeded()) | numberFormat}} Titano
-          but, since you'd need to withdraw only {{periodicTitanoWithdrawal() | numberFormat}} of them, your wallet will
-          still increase by {{totalTitanoBalance(daysNeeded()) - periodicTitanoWithdrawal() | numberFormat}} Titano 🎉
-        </p>
+        <div class="accordion-content">
+
+          <!-- desktop view -->
+          <div fxShow fxHide.lt-sm>
+            <b>️Assuming TITANO price won't change:</b>️ on {{dataSource[dataSource.length - 1].to | date: dateFormat}},
+            by taking regular profits every {{monthlyWithdraw ? 'month' : 'week'}}, you will have secured
+            {{(monthlyWithdraw ? 12 : 52) * desiredPeriodicWithdraw | numberFormat:0}} {{currency.symbol}}
+            and, more importantly, <b>your TITANO wallet will keep increasing up
+            to {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} TITANO</b>
+            (~ {{dataSource[dataSource.length - 1].finalAmount * titanoPrice | scaleNumber}} {{currency.symbol}})!
+            <div fxHide fxShow.lt-sm>Note: click on one row, to see the details of the corresponding period.</div>
+          </div>
+          <table mat-table [dataSource]="dataSource" fxShow fxHide.lt-sm>
+
+            <ng-container matColumnDef="from" fxShow fxHide.lt-sm>
+              <th mat-header-cell *matHeaderCellDef>From</th>
+              <td mat-cell *matCellDef="let element">{{element.from | date: shortDateFormat}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="to">
+              <th mat-header-cell *matHeaderCellDef>To</th>
+              <td mat-cell *matCellDef="let row">{{row.to | date: shortDateFormat}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="initialAmount">
+              <th mat-header-cell *matHeaderCellDef>TITANO</th>
+              <td mat-cell *matCellDef="let row">{{row.initialAmount | scaleNumber}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="finalAmount">
+              <th mat-header-cell *matHeaderCellDef>TITANO</th>
+              <td mat-cell *matCellDef="let row">{{row.finalAmount | scaleNumber}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="value">
+              <th mat-header-cell *matHeaderCellDef>Value ({{this.currency.symbol}})</th>
+              <td mat-cell *matCellDef="let row">{{row.value | scaleNumber}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <!-- mobile view -->
+          <div fxHide fxShow.lt-sm>
+            <b>️Assuming TITANO price won't change:</b>️ on {{dataSource[dataSource.length - 1].to | date: dateFormat}}
+            you will have withdraw
+            {{(monthlyWithdraw ? 12 : 52) * desiredPeriodicWithdraw | numberFormat:0}} {{currency.symbol}}
+            and still have {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} TITANO
+            (worth ~ {{dataSource[dataSource.length - 1].finalAmount * titanoPrice | scaleNumber}} {{currency.symbol}})!
+            Note: click on the rows below to see the details.
+          </div>
+          <table mat-table [dataSource]="dataSource" multiTemplateDataRows fxHide fxShow.lt-sm>
+
+            <ng-container matColumnDef="to">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let row">{{row.to | date: shortDateFormat}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="finalAmount">
+              <th mat-header-cell *matHeaderCellDef>TITANO</th>
+              <td mat-cell *matCellDef="let row">{{row.finalAmount | scaleNumber}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="value">
+              <th mat-header-cell *matHeaderCellDef>Value ({{this.currency.symbol}})</th>
+              <td mat-cell *matCellDef="let row">{{row.value | scaleNumber}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="expandedDetail">
+              <td mat-cell *matCellDef="let row" [attr.colspan]="mobileColumns.length">
+                <div class="row-detail"
+                     [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+                  During the period from {{row.from | date: shortDateFormat}} to {{row.to | date: shortDateFormat}} your
+                  crypto wallet, after withdrawing {{desiredPeriodicWithdraw}}
+                  {{currency.symbol}}/{{monthlyWithdraw ? 'Month' : ' Week'}}, will
+                  contain {{row.finalAmount | numberFormat}} TITANO, for a value
+                  of {{row.finalAmount * titanoPrice | numberFormat}}{{currency.symbol}}.
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="mobileColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: mobileColumns;"
+                class="mobile-row"
+                [class.example-expanded-row]="newExpandedElement === row"
+                (click)="expandedElement = newExpandedElement === row ? null : row">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="details-row"></tr>
+          </table>
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
 
