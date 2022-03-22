@@ -5,6 +5,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatExpansionModule} from "@angular/material/expansion";
@@ -17,6 +18,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
 import {CoinMarketCapService} from "./services/CoinMarketCapService";
+import { AboutTaxesDialogComponent } from './ui/about-taxes-dialog/about-taxes-dialog.component';
 import {BuyMeABeerComponent} from './ui/buy-me-a-beer/buy-me-a-beer.component';
 import {MainCardComponent} from './ui/main-card/main-card.component';
 import {NumberFormatPipe} from "./ui/pipes/number-format-pipe";
@@ -28,7 +30,8 @@ import {ScaleNumberPipe} from "./ui/pipes/scale-number-pipe";
     MainCardComponent,
     NumberFormatPipe,
     ScaleNumberPipe,
-    BuyMeABeerComponent
+    BuyMeABeerComponent,
+    AboutTaxesDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +48,8 @@ import {ScaleNumberPipe} from "./ui/pipes/scale-number-pipe";
     MatChipsModule,
     MatSelectModule,
     MatTableModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatCheckboxModule
   ],
   providers: [CoinMarketCapService],
   bootstrap: [AppComponent]

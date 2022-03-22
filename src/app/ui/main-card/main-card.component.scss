@@ -51,3 +51,11 @@ tr.mobile-row:not(.details-row):active {
   max-height: 20vh;
   overflow: auto
 }
+
+label.enabled {
+  opacity: 100%;
+}
+
+label.disabled {
+  opacity: 50%;
+}

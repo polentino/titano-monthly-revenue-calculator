@@ -14,12 +14,12 @@
       <div style="display: flex" class="small-chips">
         <mat-chip-list aria-label="Select withdrawal period">
           <mat-chip color="primary"
-                    [selected]="monthlyWithdraw"
-                    (click)="monthlyWithdraw = !monthlyWithdraw">month
+                    [selected]="monthlyWithdrawal"
+                    (click)="monthlyWithdrawal = !monthlyWithdrawal">month
           </mat-chip>
           <mat-chip color="primary"
-                    [selected]="!monthlyWithdraw"
-                    (click)="monthlyWithdraw = !monthlyWithdraw">week
+                    [selected]="!monthlyWithdrawal"
+                    (click)="monthlyWithdrawal = !monthlyWithdrawal">week
           </mat-chip>
         </mat-chip-list>
       </div>
@@ -30,14 +30,21 @@
     </label>
     <label>
       Titano, with current price of <input [(ngModel)]="titanoPrice" type="number" min="0"/> {{this.currency.symbol}}
-      /Titano.
+      /Titano, and
     </label>
     <label>
-      I assume Sell Taxes of <input [(ngModel)]="feesPercentage" type="number" min="18" max="100"/>(%).
+      I assume slippage fees of <input [(ngModel)]="slippageFees" type="number" min="0" max="100"/>(%).
     </label>
-    <label>
-      and taxes around <input [(ngModel)]="taxesPercentage" type="number" min="0" max="100"/>(%).
+    <mat-checkbox class="example-margin"
+                  [(ngModel)]="taxesCalculationEnabled"
+                  [color]="'primary'">
+      Also consider my Country's taxes
+    </mat-checkbox>
+    <label [class]="taxesCalculationEnabled ? 'enabled' : 'disabled'">, which amounts to
+      <input [disabled]="!taxesCalculationEnabled" [(ngModel)]="taxesPercentage" type="number" min="0" max="100"/>(%)
+      of the gross income.
     </label>
+
     <p></p>
 
     <mat-accordion>
@@ -48,9 +55,9 @@
 
         <p>
           As of today, with a wallet containing {{initialTitanoCapital}} Titano, if you want to
-          withdraw {{desiredPeriodicWithdraw}} {{currency.symbol}}/{{monthlyWithdraw ? "Month" : "Week"}} <b>after
-          slippage & taxes</b>,
-          meaning {{periodicTitanoWithdrawal() | numberFormat}} Titano/{{monthlyWithdraw ? "Month" : "Week"}} gross, you
+          withdraw {{desiredPeriodicWithdraw}} {{currency.symbol}}/{{monthlyWithdrawal ? "Month" : "Week"}} <b>after
+          slippage{{taxesCalculationEnabled ? ' & taxes' : ''}}</b>,
+          meaning {{periodicTitanoWithdrawal() | numberFormat}} Titano/{{monthlyWithdrawal ? "Month" : "Week"}} gross, you
           will need to wait
           until <b>{{firstWithdrawalDate() | date: dateFormat}}</b>, that is, <b>{{daysNeeded()}} days from today </b>.
         </p>
@@ -65,8 +72,8 @@
           <!-- desktop view -->
           <div fxShow fxHide.lt-sm>
             <b>️Assuming TITANO price won't change:</b>️ on {{dataSource[dataSource.length - 1].to | date: dateFormat}},
-            by taking regular profits every {{monthlyWithdraw ? 'month' : 'week'}}, you will have secured
-            {{(monthlyWithdraw ? 12 : 52) * desiredPeriodicWithdraw | numberFormat:0}} {{currency.symbol}}
+            by taking regular profits every {{monthlyWithdrawal ? 'month' : 'week'}}, you will have secured
+            {{(monthlyWithdrawal ? 12 : 52) * desiredPeriodicWithdraw | numberFormat:0}} {{currency.symbol}}
             and, more importantly, <b>your TITANO wallet will keep increasing up
             to {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} TITANO</b>
             (~ {{dataSource[dataSource.length - 1].finalAmount * titanoPrice | scaleNumber}} {{currency.symbol}})!
@@ -107,7 +114,7 @@
           <div fxHide fxShow.lt-sm>
             <b>️Assuming TITANO price won't change:</b>️ on {{dataSource[dataSource.length - 1].to | date: dateFormat}}
             you will have withdraw
-            {{(monthlyWithdraw ? 12 : 52) * desiredPeriodicWithdraw | numberFormat:0}} {{currency.symbol}}
+            {{(monthlyWithdrawal ? 12 : 52) * desiredPeriodicWithdraw | numberFormat:0}} {{currency.symbol}}
             and still have {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} TITANO
             (worth ~ {{dataSource[dataSource.length - 1].finalAmount * titanoPrice | scaleNumber}} {{currency.symbol}})!
             Note: click on the rows below to see the details.
@@ -135,7 +142,7 @@
                      [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
                   During the period from {{row.from | date: shortDateFormat}} to {{row.to | date: shortDateFormat}} your
                   crypto wallet, after withdrawing {{desiredPeriodicWithdraw}}
-                  {{currency.symbol}}/{{monthlyWithdraw ? 'Month' : ' Week'}}, will
+                  {{currency.symbol}}/{{monthlyWithdrawal ? 'Month' : ' Week'}}, will
                   contain {{row.finalAmount | numberFormat}} TITANO, for a value
                   of {{row.finalAmount * titanoPrice | numberFormat}}{{currency.symbol}}.
                 </div>
@@ -162,8 +169,8 @@
   </mat-card-content>
 
   <mat-card-actions>
-    <button mat-button (click)="openHowItWorksDialog()">HOW IT WORKS</button>
-    <button mat-button (click)="openBuyMeABeerDialog()">BUY ME A BEER🍺</button>
+    <button mat-raised-button color="primary" (click)="openHowItWorksDialog()">HOW IT WORKS</button>
+    <button mat-raised-button color="primary" (click)="openBuyMeABeerDialog()">BUY ME A BEER🍺</button>
   </mat-card-actions>
 </mat-card>
 

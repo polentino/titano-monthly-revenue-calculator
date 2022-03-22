@@ -4,6 +4,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {CoinMarketCapCurrencies} from "../../services/CoinMarketCapCurrencies";
 import {CoinMarketCapService} from "../../services/CoinMarketCapService";
+import {AboutTaxesDialogComponent} from "../about-taxes-dialog/about-taxes-dialog.component";
 import {BuyMeABeerComponent} from "../buy-me-a-beer/buy-me-a-beer.component";
 import "../../utils/utils"
 
@@ -11,7 +12,7 @@ import "../../utils/utils"
   selector: 'app-main-card',
   templateUrl: './main-card.component.html',
   styleUrls: ['./main-card.component.scss'],
-  providers: [CoinMarketCapService, { provide: Window, useValue: window }],
+  providers: [CoinMarketCapService, {provide: Window, useValue: window}],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -22,20 +23,23 @@ import "../../utils/utils"
 })
 export class MainCardComponent {
 
-  private _monthlyWithdraw = true;
+  private _monthlyWithdrawal = true;
   private _desiredPeriodicWithdraw = 1000;
   private _initialTitanoCapital = 2000;
   private _titanoPrice = 0.157907;
-  private _feesPercentage = 18;
+  private _slippageFees = 1;
   private _taxesPercentage = 30;
+  private _taxesCalculationEnabled = false;
+  private doNotShowAgain = false;
+  private sellTax = 18;
   private emitter = new EventEmitter();
 
-  get monthlyWithdraw() {
-    return this._monthlyWithdraw;
+  get monthlyWithdrawal() {
+    return this._monthlyWithdrawal;
   }
 
-  set monthlyWithdraw(value: boolean) {
-    this._monthlyWithdraw = value;
+  set monthlyWithdrawal(value: boolean) {
+    this._monthlyWithdrawal = value;
     this.emitter.emit();
   }
 
@@ -66,12 +70,12 @@ export class MainCardComponent {
     this.emitter.emit();
   }
 
-  get feesPercentage() {
-    return this._feesPercentage;
+  get slippageFees() {
+    return this._slippageFees;
   }
 
-  set feesPercentage(value: number) {
-    this._feesPercentage = value;
+  set slippageFees(value: number) {
+    this._slippageFees = value;
     this.emitter.emit();
   }
 
@@ -81,6 +85,29 @@ export class MainCardComponent {
 
   set taxesPercentage(value: number) {
     this._taxesPercentage = value;
+    this.emitter.emit();
+  }
+
+  get taxesCalculationEnabled() {
+    return this._taxesCalculationEnabled;
+  }
+
+  set taxesCalculationEnabled(value: boolean) {
+    this._taxesCalculationEnabled = value;
+    if (value && !this.doNotShowAgain) {
+      const ref = this.dialog.open(AboutTaxesDialogComponent, {
+        disableClose: true,
+        data: {
+          symbol: this.currency.symbol,
+          monthlyWithdrawal: this.monthlyWithdrawal
+        }
+      });
+
+      ref.afterClosed().subscribe(doNotShowAgain => {
+        console.log(doNotShowAgain);
+        this.doNotShowAgain = doNotShowAgain
+      });
+    }
     this.emitter.emit();
   }
 
@@ -122,15 +149,16 @@ export class MainCardComponent {
   }
 
   periodInDays() {
-    return this.monthlyWithdraw ? 31 : 7;
+    return this.monthlyWithdrawal ? 31 : 7;
   }
 
   amountBeforeFeesAndTaxes() {
     // if you consider 18% slippage and 30% taxes, to have 100 Titano net:
     // you need to have 100 / (100 - 30) * 100 = 142,85 tokens => amount  that was taxed
-    const beforeTax = (this.desiredPeriodicWithdraw / this.titanoPrice) * 100 / (100 - this.taxesPercentage);
+    const taxes = this.taxesCalculationEnabled ? 100 / (100 - this.taxesPercentage) : 1;
+    const beforeTax = (this.desiredPeriodicWithdraw / this.titanoPrice) * taxes;
     // 142,85 / (100 - 18) * 100 = 174,21 => amount that was subject to slippage
-    return beforeTax * 100 / (100 - this.feesPercentage);
+    return beforeTax * 100 / (100 - (this.sellTax + this.slippageFees));
   }
 
   daysNeeded() {
@@ -172,8 +200,8 @@ export class MainCardComponent {
   oneYearBalance() {
     const startDate = this.firstWithdrawalDate().minusDays(this.periodInDays());
     startDate.setHours(0, 0, 0, 0);
-    const iterations = this.monthlyWithdraw ? 11 : 51;
-    const days = this.monthlyWithdraw ? 31 : 7;
+    const iterations = this.monthlyWithdrawal ? 11 : 51;
+    const days = this.monthlyWithdrawal ? 31 : 7;
     const halfHourAPY = this.halfHourAPY;
     const daylyCompoundPeriods = this.daylyCompoundPeriods;
     const initialCapital = this.initialTitanoCapital;
