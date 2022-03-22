@@ -38,7 +38,7 @@
     <mat-checkbox class="example-margin"
                   [(ngModel)]="taxesCalculationEnabled"
                   [color]="'primary'">
-      Also consider my Country's taxes
+      Also include my Country's taxes
     </mat-checkbox>
     <label [class]="taxesCalculationEnabled ? 'enabled' : 'disabled'">, which amounts to
       <input [disabled]="!taxesCalculationEnabled" [(ngModel)]="taxesPercentage" type="number" min="0" max="100"/>(%)
