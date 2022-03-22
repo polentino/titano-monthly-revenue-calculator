@@ -55,11 +55,10 @@
 
         <p>
           As of today, with a wallet containing {{initialTitanoCapital}} Titano, if you want to
-          withdraw {{desiredPeriodicWithdraw}} {{currency.symbol}}/{{monthlyWithdrawal ? "Month" : "Week"}} <b>after
-          slippage{{taxesCalculationEnabled ? ' & taxes' : ''}}</b>,
-          meaning {{periodicTitanoWithdrawal() | numberFormat}} Titano/{{monthlyWithdrawal ? "Month" : "Week"}} gross, you
-          will need to wait
-          until <b>{{firstWithdrawalDate() | date: dateFormat}}</b>, that is, <b>{{daysNeeded()}} days from today </b>.
+          withdraw {{desiredPeriodicWithdraw}} {{currency.symbol}}/{{monthlyWithdrawal ? "Month" : "Week"}}<b>{{taxesCalculationEnabled ? ' after taxes' : ''}}</b>,
+          meaning {{periodicTitanoWithdrawal() | numberFormat}} Titano/{{monthlyWithdrawal ? "Month" : "Week"}} gross,
+          you will need to wait until <b>{{firstWithdrawalDate() | date: dateFormat}}</b>, that is, <b>{{daysNeeded()}}
+          days from today </b>.
         </p>
       </mat-expansion-panel>
 
