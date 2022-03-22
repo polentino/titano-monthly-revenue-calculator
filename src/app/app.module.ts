@@ -18,7 +18,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
 import {CoinMarketCapService} from "./services/CoinMarketCapService";
 import {BuyMeABeerComponent} from './ui/buy-me-a-beer/buy-me-a-beer.component';
-import {HowItWorksComponent} from './ui/how-it-works/how-it-works.component';
 import {MainCardComponent} from './ui/main-card/main-card.component';
 import {NumberFormatPipe} from "./ui/pipes/number-format-pipe";
 import {ScaleNumberPipe} from "./ui/pipes/scale-number-pipe";
@@ -29,7 +28,6 @@ import {ScaleNumberPipe} from "./ui/pipes/scale-number-pipe";
     MainCardComponent,
     NumberFormatPipe,
     ScaleNumberPipe,
-    HowItWorksComponent,
     BuyMeABeerComponent
   ],
   imports: [

@@ -5,14 +5,13 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {CoinMarketCapCurrencies} from "../../services/CoinMarketCapCurrencies";
 import {CoinMarketCapService} from "../../services/CoinMarketCapService";
 import {BuyMeABeerComponent} from "../buy-me-a-beer/buy-me-a-beer.component";
-import {HowItWorksComponent} from "../how-it-works/how-it-works.component";
 import "../../utils/utils"
 
 @Component({
   selector: 'app-main-card',
   templateUrl: './main-card.component.html',
   styleUrls: ['./main-card.component.scss'],
-  providers: [CoinMarketCapService],
+  providers: [CoinMarketCapService, { provide: Window, useValue: window }],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -98,7 +97,7 @@ export class MainCardComponent {
   dataSource: BalanceRow[] = [];
   newExpandedElement: BalanceRow | null | undefined;
 
-  constructor(private cmcService: CoinMarketCapService, private dialog: MatDialog, private snackBar: MatSnackBar) {
+  constructor(private cmcService: CoinMarketCapService, private dialog: MatDialog, private snackBar: MatSnackBar, private window: Window) {
     this.fetchQuote();
     this.dataSource = this.oneYearBalance();
     this.emitter.subscribe(() => this.dataSource = this.oneYearBalance());
@@ -163,7 +162,7 @@ export class MainCardComponent {
   }
 
   openHowItWorksDialog() {
-    this.dialog.open(HowItWorksComponent);
+    this.window.open('https://github.com/polentino/titano-monthly-revenue-calculator/blob/master/THE_MATH_BEHIND.md', '_blank');
   }
 
   openBuyMeABeerDialog() {

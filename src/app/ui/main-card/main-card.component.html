@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-title>Titano Monthly Revenue Calculator</mat-card-title>
-  <mat-card-subtitle>Helps you estimate monthly profit taking in a sustainable way</mat-card-subtitle>
+  <mat-card-subtitle>Helps you estimate monthly/weekly profit taking, in a sustainable way</mat-card-subtitle>
   <mat-card-content>
     <div class="small-chips-main">
       <div>
@@ -33,7 +33,7 @@
       /Titano.
     </label>
     <label>
-      I assume slippage fees of <input [(ngModel)]="feesPercentage" type="number" min="0" max="100"/>(%)
+      I assume Sell Taxes of <input [(ngModel)]="feesPercentage" type="number" min="18" max="100"/>(%).
     </label>
     <label>
       and taxes around <input [(ngModel)]="taxesPercentage" type="number" min="0" max="100"/>(%).
