@@ -145,7 +145,7 @@ export class MainCardComponent {
     const d = Math.log(1 + this.halfHourAPY)
     const days = Math.ceil((n / d) / 48)
     // if initial amount is so big to produce negative days, then we can start count 31 days from... today :)
-    return (days < 0 ? 0 : days) + this.periodInDays();
+    return (days < 0 ? 0 : days + this.periodInDays());
   }
 
   firstWithdrawalDate() {
