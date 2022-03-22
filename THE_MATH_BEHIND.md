@@ -175,5 +175,5 @@ I'm sorry but, with almost 200 countries in the world, there's no way I can crea
 everybody's tax system. That's really beyond my reach.
 
 With this cleared out: my calculator uses the `taxes` field to compute taxes every time you withdraw, that is, either
-monthly or weekly. It's up to you to get to know your taxation system and insert a sensible value for it. Or just leave
-set it to `0`, and then your tax accountant will tell you how much of it will have to be paid.
+monthly or weekly. It's up to you to get to know your taxation system and insert a sensible value for it. Or just set it
+to `0`, and then your tax accountant will tell you how much of it will have to be paid.
