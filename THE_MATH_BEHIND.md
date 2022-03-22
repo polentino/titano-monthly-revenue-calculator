@@ -8,7 +8,7 @@
 
 [3  It's All About Finding The Right Date](#its-all-about-finding-the-right-date)
 
-[3.1  Extending the formula: Fees and Taxes](#extending-the-formula-fees-and-taxes)
+[3.1  Extending the formula: Fees and Taxes](#extending-the-formula-slippage-and-taxes)
 
 [3.2  A Note On Taxes](#a-note-on-taxes)
 
@@ -148,13 +148,13 @@ about 70 days (actually 69.72). Therefore, after 70 days, we will start accumula
 will allow us to withdraw the desired 500 TITANO one week later (and the next one, and the next after that, etc ...),
 which means, on the 77th day, we can start withdrawing them :white_check_mark:
 
-### Extending The Formula: Fees and Taxes
+### Extending The Formula: Slippage and Taxes
 
 Now that you know how the average TITANO and the optimal compounding interval `n` are related to each other, you can
 extend the formula to include slippage fees and taxes. For example, if
 
-* slippage is 20%
-* I have to pay 30% taxes every time I withdraw
+* slippage is 2% (therefore a total of 20%, since 18% are TITANO's sell taxes), and
+* I know 30% of my gross income are taxes I must pay to my Country's tax department
 
 using the same values in my example at the beginning of the paragraph, assuming I want to withdraw 500 USD (500 TITANO
 equiv.)
@@ -174,6 +174,6 @@ and the new compounding period will be `n=4812`, or about 101 days. Thus, the pr
 I'm sorry but, with almost 200 countries in the world, there's no way I can create the perfect calculator that fits for
 everybody's tax system. That's really beyond my reach.
 
-With this cleared out: my calculator uses the `taxes` field to compute taxes every time you withdraw, that is, either
-monthly or weekly. It's up to you to get to know your taxation system and insert a sensible value for it. Or just set it
-to `0`, and then your tax accountant will tell you how much of it will have to be paid.
+With this cleared out: my calculator uses the `Country's taxes` field to compute taxes every time you withdraw, that is,
+either monthly or weekly. It's up to you to get to know your taxation system and insert a sensible value for it. Or just
+set it to `0`, and then your tax accountant will tell you how much of it will have to be paid.
