@@ -166,8 +166,8 @@ Therefore, the new average TITANO per compounding period will be
 
 > 892.857 / (7 * 24 * 2) = 2.6573 TITANO
 
-and the new compounding period will be `n=4812`, or about 101 days. Thus, the profit-taking will commence on day 108 :
-white_check_mark:
+and the new compounding period will be `n=4812`, or about 101 days. Thus, the profit-taking will commence on day 108
+:white_check_mark:
 
 ### A Note On Taxes
 
