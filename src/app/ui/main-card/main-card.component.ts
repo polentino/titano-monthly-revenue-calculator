@@ -13,6 +13,7 @@ import "../../utils/utils"
   templateUrl: './main-card.component.html',
   styleUrls: ['./main-card.component.scss'],
   providers: [CoinMarketCapService, {provide: Window, useValue: window}],
+
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),

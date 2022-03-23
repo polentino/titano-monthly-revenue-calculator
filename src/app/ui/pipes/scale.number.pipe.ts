@@ -5,22 +5,22 @@ import {Pipe, PipeTransform} from "@angular/core";
 export class ScaleNumberPipe implements PipeTransform {
 
   transform(value: number): string {
-    const exponent = Math.trunc(Math.log10(value));
+    const exponent = Math.trunc(Math.log10(Math.abs(value)));
     if (exponent < 3) {
       return value.toString();
     }
 
-    const valueScaled = Math.trunc(value) / this.scaleFactor(exponent);
-    const multiplierSuffix = this.suffix(exponent);
+    const valueScaled = Math.trunc(value) / ScaleNumberPipe.scaleFactor(exponent);
+    const multiplierSuffix = ScaleNumberPipe.suffix(exponent);
 
-    return `${valueScaled.toFixed(2)}${multiplierSuffix}`
+    return `${valueScaled.toFixed(2)}${multiplierSuffix}`;
   }
 
-  private scaleFactor(exponent: number): number {
+  private static scaleFactor(exponent: number): number {
     return Math.pow(1000, Math.trunc(exponent / 3));
   }
 
-  private suffix(exponent: number): string {
+  private static suffix(exponent: number): string {
     switch (Math.trunc(exponent / 3)) {
       case 1:
         return "K";

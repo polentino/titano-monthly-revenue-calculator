@@ -1,6 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MainCardComponent } from './main-card.component';
+import {HttpClientModule} from "@angular/common/http";
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MainCardComponent} from './main-card.component';
+import {PipesModule} from "../pipes/pipes.module";
 
 describe('MainCardComponent', () => {
   let component: MainCardComponent;
@@ -8,9 +12,13 @@ describe('MainCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MainCardComponent ]
-    })
-    .compileComponents();
+      declarations: [MainCardComponent],
+      imports: [
+        HttpClientModule,
+        MatSnackBarModule,
+        MatDialogModule,
+        PipesModule]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { BuyMeABeerComponent } from './buy-me-a-beer.component';
+import {BuyMeABeerComponent} from './buy-me-a-beer.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('BuyMeABeerComponent', () => {
   let component: BuyMeABeerComponent;
@@ -8,9 +9,9 @@ describe('BuyMeABeerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BuyMeABeerComponent ]
-    })
-    .compileComponents();
+      declarations: [BuyMeABeerComponent],
+      imports: [MatSnackBarModule]
+    }).compileComponents();
   });
 
   beforeEach(() => {

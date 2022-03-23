@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AboutTaxesDialogComponent } from './about-taxes-dialog.component';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {AboutTaxesDialogComponent} from './about-taxes-dialog.component';
 
 describe('AboutTaxesDialogComponent', () => {
   let component: AboutTaxesDialogComponent;
@@ -8,9 +9,13 @@ describe('AboutTaxesDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AboutTaxesDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [AboutTaxesDialogComponent],
+      imports: [MatDialogModule],
+      providers: [
+        {provide: MatDialogRef, useValue: {}},
+        {provide: MAT_DIALOG_DATA, useValue: []},
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

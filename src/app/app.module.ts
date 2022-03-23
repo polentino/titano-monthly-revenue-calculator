@@ -18,18 +18,15 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
 import {CoinMarketCapService} from "./services/CoinMarketCapService";
-import { AboutTaxesDialogComponent } from './ui/about-taxes-dialog/about-taxes-dialog.component';
+import {AboutTaxesDialogComponent} from './ui/about-taxes-dialog/about-taxes-dialog.component';
 import {BuyMeABeerComponent} from './ui/buy-me-a-beer/buy-me-a-beer.component';
 import {MainCardComponent} from './ui/main-card/main-card.component';
-import {NumberFormatPipe} from "./ui/pipes/number-format-pipe";
-import {ScaleNumberPipe} from "./ui/pipes/scale-number-pipe";
+import {PipesModule} from "./ui/pipes/pipes.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     MainCardComponent,
-    NumberFormatPipe,
-    ScaleNumberPipe,
     BuyMeABeerComponent,
     AboutTaxesDialogComponent
   ],
@@ -49,7 +46,8 @@ import {ScaleNumberPipe} from "./ui/pipes/scale-number-pipe";
     MatSelectModule,
     MatTableModule,
     FlexLayoutModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    PipesModule
   ],
   providers: [CoinMarketCapService],
   bootstrap: [AppComponent]
