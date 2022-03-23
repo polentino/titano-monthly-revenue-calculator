@@ -3,6 +3,7 @@ import {Pipe, PipeTransform} from "@angular/core";
 
 @Pipe({name: 'scaleNumber'})
 export class ScaleNumberPipe implements PipeTransform {
+  private static scales = ["K", "M", "G", "T", "P", "E", "Z", "Y", "???"];
 
   transform(value: number): string {
     const exponent = Math.trunc(Math.log10(Math.abs(value)));
@@ -21,26 +22,9 @@ export class ScaleNumberPipe implements PipeTransform {
   }
 
   private static suffix(exponent: number): string {
-    switch (Math.trunc(exponent / 3)) {
-      case 1:
-        return "K";
-      case 2:
-        return "M";
-      case 3:
-        return "G";
-      case 4:
-        return "T";
-      case 5:
-        return "P";
-      // those are a bit too much :)
-      case 6:
-        return "E";
-      case 7:
-        return "Z";
-      case 8:
-        return "Y";
-      default:
-        return "???";
-    }
+    const index = Math.trunc(exponent / 3);
+    const finalIndex = (index > this.scales.length - 1) ? this.scales.length : index;
+    return this.scales[finalIndex - 1];
   }
+
 }
