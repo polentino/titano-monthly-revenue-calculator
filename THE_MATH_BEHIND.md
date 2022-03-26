@@ -144,9 +144,9 @@ and now we're just one logarithm away from the result:
 And there, you have it!
 
 Proof: if you substitute the average TITANO of the example of this paragraph, you will get `n=3346.66` which are about
-about 70 days (actually 69.72). Therefore, after 70 days, we will start accumulating enough "critical TITANO mass" which
-will allow us to withdraw the desired 500 TITANO one week later (and the next one, and the next after that, etc ...),
-which means, on the 77th day, we can start withdrawing them :white_check_mark:
+70 days (actually 69.72). Therefore, after 70 days, we will start accumulating enough "critical TITANO mass" which will
+allow us to withdraw the desired 500 TITANO one week later (and the next one, and the next after that, etc ...), which
+means, on the 77th day, we can start withdrawing them :white_check_mark:
 
 ### Extending The Formula: Slippage and Taxes
 
@@ -157,8 +157,7 @@ extend the formula to include slippage fees and taxes. For example, if
 * I know 30% of my gross income are taxes I must pay to my Country's tax department
 
 using the same values in my example at the beginning of the paragraph, assuming I want to withdraw 500 USD (500 TITANO
-equiv.)
-**after taxes**, it means that the actual TITANO that will leave my wallet, every week, will be
+equiv.) **after taxes**, it means that the actual TITANO that will leave my wallet, every week, will be
 
 > (500/(1-0.3))/(1-0.2) = 892.857 TITANO
 
