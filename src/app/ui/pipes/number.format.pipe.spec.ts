@@ -3,6 +3,7 @@ import {NumberFormatPipe} from "./number.format.pipe";
 describe('NumberFormatPipe', () => {
   const pipe = new NumberFormatPipe();
 
+  // todo: replace all " with '
   it(`should convert '0.123456' into '0.123'`, () => {
     expect(pipe.transform(0.123456)).toEqual("0.123");
   });

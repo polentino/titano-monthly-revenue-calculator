@@ -1,6 +1,5 @@
 import {Pipe, PipeTransform} from "@angular/core";
 
-
 @Pipe({name: 'scaleNumber'})
 export class ScaleNumberPipe implements PipeTransform {
   private static scales = ["K", "M", "G", "T", "P", "E", "Z", "Y", "???"];
@@ -26,5 +25,4 @@ export class ScaleNumberPipe implements PipeTransform {
     const finalIndex = (index > this.scales.length - 1) ? this.scales.length : index;
     return this.scales[finalIndex - 1];
   }
-
 }

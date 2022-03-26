@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {BuyMeABeerComponent} from './buy-me-a-beer.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {BuyMeABeerComponent} from './buy-me-a-beer.component';
 
 describe('BuyMeABeerComponent', () => {
   let component: BuyMeABeerComponent;

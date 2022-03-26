@@ -2,6 +2,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Component, EventEmitter} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {BalanceRow} from "../../services/CalculatorService";
 import {CoinMarketCapCurrencies} from "../../services/CoinMarketCapCurrencies";
 import {CoinMarketCapService} from "../../services/CoinMarketCapService";
 import {AboutTaxesDialogComponent} from "../about-taxes-dialog/about-taxes-dialog.component";
@@ -105,7 +106,6 @@ export class MainCardComponent {
       });
 
       ref.afterClosed().subscribe(doNotShowAgain => {
-        console.log(doNotShowAgain);
         this.doNotShowAgain = doNotShowAgain
       });
     }
@@ -180,16 +180,6 @@ export class MainCardComponent {
     return (new Date()).plusDays(this.daysNeeded());
   }
 
-  totalTitanoBalance(days: number) {
-    // copy/paste this formula in google to see the result by yourself: 1000 * (1 + 0,0003958)^(48*day)
-    // taken from https://www.investopedia.com/terms/c/compoundinterest.asp
-    return this.initialTitanoCapital * Math.pow(1 + this.halfHourAPY, this.daylyCompoundPeriods * days);
-  }
-
-  totalTitanoRevenue(days: number) {
-    return this.totalTitanoBalance(days) - this.initialTitanoCapital;
-  }
-
   openHowItWorksDialog() {
     this.window.open('https://github.com/polentino/titano-monthly-revenue-calculator/blob/master/THE_MATH_BEHIND.md', '_blank');
   }
@@ -238,17 +228,4 @@ export class MainCardComponent {
 
     return balanceAnalysis;
   }
-}
-
-export interface BalanceRow {
-  idx: number;
-  from: Date;
-  to: Date;
-  initialAmount: number;
-  finalAmount: number;
-  value: number
-}
-
-export class Balance {
-  rows: Array<BalanceRow> = [];
 }
