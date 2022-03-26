@@ -1,20 +1,20 @@
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Injectable} from "@angular/core";
-import {Currency} from "./CoinMarketCapCurrencies";
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Currency} from './CoinMarketCapCurrencies';
 
 
-@Injectable({providedIn: "any"})
+@Injectable({providedIn: 'any'})
 export class CoinMarketCapService {
   private TITANO_ID = 14746
   // todo extract & test
-  private url = "https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart";
+  private url = 'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart';
 
   params(currency: Currency) {
     const params = new HttpParams()
       .set('id', this.TITANO_ID)
       .set('range', '1D');
 
-    return currency.symbol === "USD" ? params : params.set('convertId', currency.id) ;
+    return currency.symbol === 'USD' ? params : params.set('convertId', currency.id) ;
   }
 
   constructor(private http: HttpClient) {

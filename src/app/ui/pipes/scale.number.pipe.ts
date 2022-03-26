@@ -1,8 +1,8 @@
-import {Pipe, PipeTransform} from "@angular/core";
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({name: 'scaleNumber'})
 export class ScaleNumberPipe implements PipeTransform {
-  private static scales = ["K", "M", "G", "T", "P", "E", "Z", "Y", "???"];
+  private static scales = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y', '???'];
 
   transform(value: number): string {
     const exponent = Math.trunc(Math.log10(Math.abs(value)));

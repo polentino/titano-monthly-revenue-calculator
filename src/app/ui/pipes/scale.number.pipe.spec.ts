@@ -1,15 +1,15 @@
-import {ScaleNumberPipe} from "./scale.number.pipe";
+import {ScaleNumberPipe} from './scale.number.pipe';
 
 describe('ScaleNumberPipe', () => {
   const pipe = new ScaleNumberPipe();
-  const scales = ["M", "G", "T", "P", "E", "Z", "Y", "???"];
+  const scales = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y', '???'];
 
   it(`should not convert a positive number lower than 1000`, () => {
-    expect(pipe.transform(999)).toEqual("999");
+    expect(pipe.transform(999)).toEqual('999');
   });
 
   it(`should not convert a negative number greater than -1000`, () => {
-    expect(pipe.transform(-999)).toEqual("-999");
+    expect(pipe.transform(-999)).toEqual('-999');
   });
 
   scales.forEach((scale, index) => {

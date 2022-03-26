@@ -1,13 +1,13 @@
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Component, EventEmitter} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {BalanceRow} from "../../services/CalculatorService";
-import {CoinMarketCapCurrencies} from "../../services/CoinMarketCapCurrencies";
-import {CoinMarketCapService} from "../../services/CoinMarketCapService";
-import {AboutTaxesDialogComponent} from "../about-taxes-dialog/about-taxes-dialog.component";
-import {BuyMeABeerComponent} from "../buy-me-a-beer/buy-me-a-beer.component";
-import "../../utils/utils"
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {BalanceRow} from '../../services/CalculatorService';
+import {CoinMarketCapCurrencies} from '../../services/CoinMarketCapCurrencies';
+import {CoinMarketCapService} from '../../services/CoinMarketCapService';
+import {AboutTaxesDialogComponent} from '../about-taxes-dialog/about-taxes-dialog.component';
+import {BuyMeABeerComponent} from '../buy-me-a-beer/buy-me-a-beer.component';
+import '../../utils/utils'
 
 @Component({
   selector: 'app-main-card',

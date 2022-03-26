@@ -1,10 +1,10 @@
 
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule} from '@angular/common/http';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatDialogModule} from "@angular/material/dialog";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MainCardComponent} from './main-card.component';
-import {PipesModule} from "../pipes/pipes.module";
+import {PipesModule} from '../pipes/pipes.module';
 
 describe('MainCardComponent', () => {
   let component: MainCardComponent;

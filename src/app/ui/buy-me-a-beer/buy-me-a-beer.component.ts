@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-buy-me-a-beer',
@@ -12,10 +12,10 @@ export class BuyMeABeerComponent {
   }
 
   getAddress() {
-    return "0x26b9ee3E56E11D740347738825e5e8c6940cF1aA";
+    return '0x26b9ee3E56E11D740347738825e5e8c6940cF1aA';
   }
 
   sayThankYou() {
-    this.snackBar.open("Address copied, thank you!", "Close", {duration: 5000});
+    this.snackBar.open('Address copied, thank you!', 'Close', {duration: 5000});
   }
 }

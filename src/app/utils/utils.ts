@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-Object.defineProperty(Date.prototype, "clone", {
+Object.defineProperty(Date.prototype, 'clone', {
   enumerable: false,
   configurable: false,
   writable: false,
@@ -17,7 +17,7 @@ Object.defineProperty(Date.prototype, "clone", {
   }
 });
 
-Object.defineProperty(Date.prototype, "plusDays", {
+Object.defineProperty(Date.prototype, 'plusDays', {
   enumerable: false,
   configurable: false,
   writable: false,
@@ -31,7 +31,7 @@ Object.defineProperty(Date.prototype, "plusDays", {
   }
 });
 
-Object.defineProperty(Date.prototype, "minusDays", {
+Object.defineProperty(Date.prototype, 'minusDays', {
   enumerable: false,
   configurable: false,
   writable: false,

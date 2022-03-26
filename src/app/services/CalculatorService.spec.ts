@@ -1,4 +1,4 @@
-import {BalanceRow, CalculatorData, CalculatorService, WithdrawalPeriod} from "./CalculatorService";
+import {BalanceRow, CalculatorData, CalculatorService, WithdrawalPeriod} from './CalculatorService';
 
 describe('CalculatorService', () => {
   const service = new CalculatorService();
