@@ -14,10 +14,6 @@ export class AboutTaxesDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: AboutTaxesDialogComponentData) {
   }
 
-  closeDialog() {
-    this.dialogRef.close({})
-  }
-
   uppercasePeriod() {
     return WithdrawalPeriod.toStringAdjective(this.data.withdrawalPeriod, true);
   }

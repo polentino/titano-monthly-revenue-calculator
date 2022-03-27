@@ -9,12 +9,13 @@ describe('CalculatorService', () => {
     desiredPeriodicAmountToWithdraw: 100,
     slippageFeesPct: 2,
     initialCryptoCapital: 1000,
+    cryptoPrice: 1, // made up value :)
     countryTaxes: 30,
     countryTaxesCalculationEnabled: true,
     advanced: {
+      name: 'Titano',
       compoundMinutes: 30,
       periodAPY: 0.0003958,
-      cryptoPrice: 1, // made up value :)
       contractSellFeesPct: 18
     }
   };

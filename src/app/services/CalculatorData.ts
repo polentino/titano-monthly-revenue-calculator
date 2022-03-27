@@ -6,6 +6,7 @@ export interface CalculatorData {
   desiredPeriodicAmountToWithdraw: number;
   slippageFeesPct: number;
   initialCryptoCapital: number;
+  cryptoPrice: number
   countryTaxes: number;
   countryTaxesCalculationEnabled: boolean;
   advanced: AdvancedCalculatorData;

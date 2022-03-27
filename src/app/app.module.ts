@@ -1,35 +1,41 @@
-import {ClipboardModule} from "@angular/cdk/clipboard";
-import {HttpClientModule} from "@angular/common/http";
+import {ClipboardModule} from '@angular/cdk/clipboard';
+import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {FormsModule} from "@angular/forms";
-import {MatButtonModule} from "@angular/material/button";
-import {MatCardModule} from "@angular/material/card";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatChipsModule} from "@angular/material/chips";
-import {MatDialogModule} from "@angular/material/dialog";
-import {MatExpansionModule} from "@angular/material/expansion";
-import {MatIconModule} from "@angular/material/icon";
-import {MatSelectModule} from "@angular/material/select";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {MatTableModule} from "@angular/material/table";
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {FormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatTableModule} from '@angular/material/table';
 import {BrowserModule} from '@angular/platform-browser';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
-import {CalculatorService} from "./services/CalculatorService";
-import {CoinMarketCapService} from "./services/CoinMarketCapService";
+import {CalculatorService} from './services/CalculatorService';
+import {CoinMarketCapService} from './services/CoinMarketCapService';
 import {AboutTaxesDialogComponent} from './ui/about-taxes-dialog/about-taxes-dialog.component';
 import {BuyMeABeerComponent} from './ui/buy-me-a-beer/buy-me-a-beer.component';
 import {MainCardComponent} from './ui/main-card/main-card.component';
-import {PipesModule} from "./ui/pipes/pipes.module";
+import {PipesModule} from './ui/pipes/pipes.module';
+import {AdvancedSettingsComponent} from './ui/advanced-settings/advanced-settings.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainCardComponent,
     BuyMeABeerComponent,
-    AboutTaxesDialogComponent
+    AboutTaxesDialogComponent,
+    AdvancedSettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -41,6 +47,8 @@ import {PipesModule} from "./ui/pipes/pipes.module";
     MatSnackBarModule,
     FormsModule,
     MatExpansionModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatIconModule,
     ClipboardModule,
     MatChipsModule,
@@ -48,7 +56,8 @@ import {PipesModule} from "./ui/pipes/pipes.module";
     MatTableModule,
     FlexLayoutModule,
     MatCheckboxModule,
-    PipesModule
+    PipesModule,
+    MatTooltipModule
   ],
   providers: [
     CalculatorService,

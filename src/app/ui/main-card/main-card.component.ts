@@ -8,6 +8,7 @@ import {CoinMarketCapCurrencies} from '../../services/CoinMarketCapCurrencies';
 import {CoinMarketCapService} from '../../services/CoinMarketCapService';
 import {WithdrawalPeriod} from '../../services/WithdrawalPeriod';
 import {AboutTaxesDialogComponent} from '../about-taxes-dialog/about-taxes-dialog.component';
+import {AdvancedSettingsComponent} from '../advanced-settings/advanced-settings.component';
 import {BuyMeABeerComponent} from '../buy-me-a-beer/buy-me-a-beer.component';
 import '../../utils/utils'
 
@@ -29,6 +30,7 @@ export class MainCardComponent implements DoCheck {
   model = CalculatorData.clone(TITANO_DATA);
   withdrawalPeriods = WithdrawalPeriod.values;
   WithdrawalPeriod = WithdrawalPeriod; // damn TS DI
+  titanoSettingsInUse = true;
   doNotShowAgain = false;
 
   set taxesCalculationEnabled(value: boolean) {
@@ -43,7 +45,7 @@ export class MainCardComponent implements DoCheck {
       });
 
       ref.afterClosed().subscribe(doNotShowAgain => {
-        this.doNotShowAgain = doNotShowAgain
+        this.doNotShowAgain = doNotShowAgain;
       });
     }
   }
@@ -75,11 +77,12 @@ export class MainCardComponent implements DoCheck {
       this.model.desiredPeriodicAmountToWithdraw != this.previousModel.desiredPeriodicAmountToWithdraw ||
       this.model.slippageFeesPct != this.previousModel.slippageFeesPct ||
       this.model.initialCryptoCapital != this.previousModel.initialCryptoCapital ||
+      this.model.cryptoPrice != this.previousModel.cryptoPrice ||
       this.model.countryTaxes != this.previousModel.countryTaxes ||
       this.model.countryTaxesCalculationEnabled != this.previousModel.countryTaxesCalculationEnabled ||
       this.model.advanced.compoundMinutes != this.previousModel.advanced.compoundMinutes ||
+      this.model.advanced.name != this.previousModel.advanced.name ||
       this.model.advanced.periodAPY != this.previousModel.advanced.periodAPY ||
-      this.model.advanced.cryptoPrice != this.previousModel.advanced.cryptoPrice ||
       this.model.advanced.contractSellFeesPct != this.previousModel.advanced.contractSellFeesPct
     ) {
       this.previousModel = CalculatorData.clone(this.model);
@@ -88,12 +91,16 @@ export class MainCardComponent implements DoCheck {
   }
 
   fetchQuote() {
+    if (!this.titanoSettingsInUse) {
+      console.error('CoinMarketCap quote retrieval is disabled for custom tokens');
+      return;
+    }
     const c = this.currency;
     this.cmcService.getQuote(c)
       .subscribe(data => {
           // todo ensure we catch errors!
           const price = Object.values(data.data.points).pop().v[0];
-          this.model.advanced.cryptoPrice = price;
+          this.model.cryptoPrice = price;
         },
         error => {
           console.error(error);
@@ -117,6 +124,14 @@ export class MainCardComponent implements DoCheck {
     return (new Date()).plusDays(this.daysNeeded());
   }
 
+  oneYearBalance() {
+    return this.calculatorService.oneYearBalance(this.model);
+  }
+
+  estimatedOneYearProfit() {
+    return this.calculatorService.estimatedOneYearProfit(this.model);
+  }
+
   openHowItWorksDialog() {
     this.window.open('https://github.com/polentino/titano-monthly-revenue-calculator/blob/master/THE_MATH_BEHIND.md', '_blank');
   }
@@ -125,11 +140,29 @@ export class MainCardComponent implements DoCheck {
     this.dialog.open(BuyMeABeerComponent);
   }
 
-  oneYearBalance() {
-    return this.calculatorService.oneYearBalance(this.model);
-  }
+  openAdvancedSettings() {
+    const dialogModel = {...this.model.advanced};
+    const ref = this.dialog.open(AdvancedSettingsComponent, {
+      disableClose: true,
+      data: dialogModel
+    });
 
-  estimatedOneYearProfit() {
-    return this.calculatorService.estimatedOneYearProfit(this.model);
+    ref.afterClosed().subscribe(newSettings => {
+      if (newSettings === undefined || (
+        // screw it, why `newSettings == TITANO_DATA.advanced` doesn't work
+        newSettings.name == TITANO_DATA.advanced.name &&
+        newSettings.compoundMinutes == TITANO_DATA.advanced.compoundMinutes &&
+        newSettings.periodAPY == TITANO_DATA.advanced.periodAPY &&
+        newSettings.contractSellFeesPct == TITANO_DATA.advanced.contractSellFeesPct
+      )) {
+        this.titanoSettingsInUse = true;
+        this.model.advanced = {...TITANO_DATA.advanced};
+      } else {
+        this.titanoSettingsInUse = false;
+        this.model.advanced = newSettings;
+      }
+      // schedule a new estimation
+      this.dataSource = this.oneYearBalance();
+    });
   }
 }

@@ -9,7 +9,7 @@ export class CalculatorService {
     // if you consider 18% slippage and 30% taxes, to have 100 Titano net:
     // you need to have 100 * ((100 / )(100 - 30)) = 142,85 tokens => amount  that was taxed
     const taxes = data.countryTaxesCalculationEnabled ? 100 / (100 - data.countryTaxes) : 1;
-    const beforeTax = (data.desiredPeriodicAmountToWithdraw / data.advanced.cryptoPrice) * taxes;
+    const beforeTax = (data.desiredPeriodicAmountToWithdraw / data.cryptoPrice) * taxes;
     // 142,85 / (100 - 18) * 100 = 174,21 => amount that was subject to slippage
     return beforeTax * 100 / (100 - (data.advanced.contractSellFeesPct + data.slippageFeesPct));
   }
@@ -37,7 +37,7 @@ export class CalculatorService {
   oneYearBalance(data: CalculatorData): Array<BalanceRow> {
     const days = CalculatorService.periodToDays(data);
     const desiredPeriodicWithdraw = data.desiredPeriodicAmountToWithdraw;
-    const cryptoPrice = data.advanced.cryptoPrice;
+    const cryptoPrice = data.cryptoPrice;
     const apy = data.advanced.periodAPY;
     const initialCapital = data.initialCryptoCapital;
 
@@ -121,12 +121,13 @@ export const TITANO_DATA: CalculatorData = {
   desiredPeriodicAmountToWithdraw: 100,
   slippageFeesPct: 1,
   initialCryptoCapital: 1000,
+  cryptoPrice: 0.157907,
   countryTaxes: 30,
   countryTaxesCalculationEnabled: false,
   advanced: {
+    name: 'Titano',
     compoundMinutes: 30,
     periodAPY: 0.0003958, // from TITANO website
-    cryptoPrice: 0.157907,
     contractSellFeesPct: 18
   }
 };
