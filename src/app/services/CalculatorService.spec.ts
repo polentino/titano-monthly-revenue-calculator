@@ -58,6 +58,13 @@ describe('CalculatorService', () => {
       data.desiredPeriodicAmountToWithdraw = 500;
       expect(service.daysNeeded(data)).toEqual(108);
     });
+
+    it('corner case: to withdraw 10$ net weekly, with 1000$ capital, sell taxes 20%, Country taxes are 30%, I need 0 days', () => {
+      const data = {...testData};
+      data.desiredPeriodicAmountToWithdraw = 10;
+      // the capital is so disproportionate wrt the amount to withdraw, that I can start withdrawing it right away
+      expect(service.daysNeeded(data)).toEqual(0);
+    });
   });
 
   describe('oneYearBalance', () => {
