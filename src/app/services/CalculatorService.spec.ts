@@ -1,11 +1,13 @@
-import {BalanceRow, CalculatorData, CalculatorService, WithdrawalPeriod} from './CalculatorService';
+import {CalculatorData} from './CalculatorData';
+import {BalanceRow, CalculatorService} from './CalculatorService';
+import {WithdrawalPeriod} from './WithdrawalPeriod';
 
 describe('CalculatorService', () => {
   const service = new CalculatorService();
   const testData: CalculatorData = {
     withdrawalPeriod: WithdrawalPeriod.WEEKLY,
     desiredPeriodicAmountToWithdraw: 100,
-    slippageFeePct: 2,
+    slippageFeesPct: 2,
     initialCryptoCapital: 1000,
     countryTaxes: 30,
     countryTaxesCalculationEnabled: true,
@@ -13,26 +15,26 @@ describe('CalculatorService', () => {
       compoundMinutes: 30,
       periodAPY: 0.0003958,
       cryptoPrice: 1, // made up value :)
-      contractSellFeePct: 18
+      contractSellFeesPct: 18
     }
   };
 
   describe('amountBeforeFeesAndTaxes', () => {
     it('to withdraw 100$ net, if total sell taxes are 20%, without Country taxes, I need 125$ gross', () => {
-      const data = {...testData};
+      const data = CalculatorData.clone(testData);
       data.countryTaxesCalculationEnabled = false;
       expect(service.amountBeforeFeesAndTaxes(data)).toEqual(125);
     });
 
     it('to withdraw 100$ net, if total sell taxes are 20%, Country taxes are 30%, I need 178.5714$ gross', () => {
-      const data = {...testData};
+      const data = CalculatorData.clone(testData);
       expect(service.amountBeforeFeesAndTaxes(data)).toBeCloseTo(178.5714);
     });
   });
 
   describe('daysNeeded', () => {
     it('to withdraw 500$ net monthly, with 1000$ capital, sell taxes are 20%, without Country taxes, I need 35 days', () => {
-      const data = {...testData};
+      const data = CalculatorData.clone(testData);
       data.withdrawalPeriod = WithdrawalPeriod.MONTHLY;
       data.desiredPeriodicAmountToWithdraw = 500;
       data.countryTaxesCalculationEnabled = false;
@@ -40,27 +42,27 @@ describe('CalculatorService', () => {
     });
 
     it('to withdraw 500$ net monthly, with 1000$ capital, sell taxes 20%, Country taxes are 30%, I need 53 days', () => {
-      const data = {...testData};
+      const data = CalculatorData.clone(testData);
       data.withdrawalPeriod = WithdrawalPeriod.MONTHLY;
       data.desiredPeriodicAmountToWithdraw = 500;
       expect(service.daysNeeded(data)).toEqual(53);
     });
 
     it('to withdraw 500$ net weekly, with 1000$ capital, sell taxes are 20%, without Country taxes, I need 89 days', () => {
-      const data = {...testData};
+      const data = CalculatorData.clone(testData);
       data.desiredPeriodicAmountToWithdraw = 500;
       data.countryTaxesCalculationEnabled = false;
       expect(service.daysNeeded(data)).toEqual(89);
     });
 
     it('to withdraw 500$ net weekly, with 1000$ capital, sell taxes 20%, Country taxes are 30%, I need 108 days', () => {
-      const data = {...testData};
+      const data = CalculatorData.clone(testData);
       data.desiredPeriodicAmountToWithdraw = 500;
       expect(service.daysNeeded(data)).toEqual(108);
     });
 
     it('corner case: to withdraw 10$ net weekly, with 1000$ capital, sell taxes 20%, Country taxes are 30%, I need 0 days', () => {
-      const data = {...testData};
+      const data = CalculatorData.clone(testData);
       data.desiredPeriodicAmountToWithdraw = 10;
       // the capital is so disproportionate wrt the amount to withdraw, that I can start withdrawing it right away
       expect(service.daysNeeded(data)).toEqual(0);
@@ -69,7 +71,7 @@ describe('CalculatorService', () => {
 
   describe('oneYearBalance', () => {
     it('to withdraw 500$ net monthly, with 1000$ capital, sell taxes are 20%, Country taxes are 30%, the 1-Year balance is', () => {
-      const data = {...testData};
+      const data = CalculatorData.clone(testData);
       data.withdrawalPeriod = WithdrawalPeriod.MONTHLY;
       data.desiredPeriodicAmountToWithdraw = 500;
       const balance = service.oneYearBalance(data);

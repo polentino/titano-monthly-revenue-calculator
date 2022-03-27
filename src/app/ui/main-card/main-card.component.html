@@ -4,7 +4,7 @@
   <mat-card-content>
     <div class="small-chips-main">
       <div>
-        <label>I would like to take profit for <input [(ngModel)]="desiredPeriodicWithdraw" type="number"
+        <label>I would like to take profit for <input [(ngModel)]="model.desiredPeriodicAmountToWithdraw" type="number"
                                                       min="0"/></label>
         <mat-select [(value)]="currency" (selectionChange)="fetchQuote()">
           <mat-option *ngFor="let c of currencies" [value]="c">{{c.symbol}}</mat-option>
@@ -13,35 +13,32 @@
       </div>
       <div style="display: flex" class="small-chips">
         <mat-chip-list aria-label="Select withdrawal period">
-          <mat-chip color="primary"
-                    [selected]="monthlyWithdrawal"
-                    (click)="monthlyWithdrawal = !monthlyWithdrawal">month
-          </mat-chip>
-          <mat-chip color="primary"
-                    [selected]="!monthlyWithdrawal"
-                    (click)="monthlyWithdrawal = !monthlyWithdrawal">week
-          </mat-chip>
+          <mat-chip *ngFor="let wp of withdrawalPeriods" color="primary"
+                    [selected]="model.withdrawalPeriod == wp"
+                    (click)="model.withdrawalPeriod = wp">{{WithdrawalPeriod.toStringNoun(wp)}}</mat-chip>
         </mat-chip-list>
       </div>
       .
     </div>
     <label>
-      My wallet contains <input [(ngModel)]="initialTitanoCapital" type="number" min="0"/>
+      My wallet contains <input [(ngModel)]="model.initialCryptoCapital" type="number" min="0"/>
     </label>
     <label>
-      Titano, with current price of <input [(ngModel)]="titanoPrice" type="number" min="0"/> {{this.currency.symbol}}
+      Titano, with current price of <input [(ngModel)]="model.advanced.cryptoPrice" type="number"
+                                           min="0"/> {{this.currency.symbol}}
       /Titano, and
     </label>
     <label>
-      I assume slippage fees of <input [(ngModel)]="slippageFees" type="number" min="0" max="100"/>(%).
+      I assume slippage fees of <input [(ngModel)]="model.slippageFeesPct" type="number" min="0" max="100"/>(%).
     </label>
     <mat-checkbox class="example-margin"
                   [(ngModel)]="taxesCalculationEnabled"
                   [color]="'primary'">
       Also include my Country's taxes
     </mat-checkbox>
-    <label [class]="taxesCalculationEnabled ? 'enabled' : 'disabled'">, which amounts to
-      <input [disabled]="!taxesCalculationEnabled" [(ngModel)]="taxesPercentage" type="number" min="0" max="100"/>(%)
+    <label [class]="model.countryTaxesCalculationEnabled ? 'enabled' : 'disabled'">, which amounts to
+      <input [disabled]="!model.countryTaxesCalculationEnabled" [(ngModel)]="model.countryTaxes" type="number" min="0"
+             max="100"/>(%)
       of the gross income.
     </label>
 
@@ -54,9 +51,12 @@
         </mat-expansion-panel-header>
 
         <p>
-          As of today, with a wallet containing {{initialTitanoCapital}} Titano, if you want to
-          withdraw {{desiredPeriodicWithdraw}} {{currency.symbol}}/{{monthlyWithdrawal ? "Month" : "Week"}}<b>{{taxesCalculationEnabled ? ' after taxes' : ''}}</b>,
-          meaning {{periodicTitanoWithdrawal() | numberFormat}} Titano/{{monthlyWithdrawal ? "Month" : "Week"}} gross,
+          As of today, with a wallet containing {{model.initialCryptoCapital}} Titano, if you want to
+          withdraw {{model.desiredPeriodicAmountToWithdraw}} {{currency.symbol}}
+          /{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod, true)}}
+          <b>{{model.countryTaxesCalculationEnabled ? ' after taxes' : ''}}</b>,
+          meaning {{periodicTitanoWithdrawal() | numberFormat}}
+          Titano/{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod, true)}} gross,
           you will need to wait until <b>{{firstWithdrawalDate() | date: dateFormat}}</b>, that is, <b>{{daysNeeded()}}
           days from today </b>.
         </p>
@@ -71,11 +71,12 @@
           <!-- desktop view -->
           <div fxShow fxHide.lt-sm>
             <b>️Assuming TITANO price won't change:</b>️ on {{dataSource[dataSource.length - 1].to | date: dateFormat}},
-            by taking regular profits every {{monthlyWithdrawal ? 'month' : 'week'}}, you will have secured
-            {{(monthlyWithdrawal ? 12 : 52) * desiredPeriodicWithdraw | numberFormat:0}} {{currency.symbol}}
+            by taking regular profits every {{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod)}}, you will have secured
+            {{estimatedOneYearProfit() | numberFormat:0}} {{currency.symbol}}
             and, more importantly, <b>your TITANO wallet will keep increasing up
             to {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} TITANO</b>
-            (~ {{dataSource[dataSource.length - 1].finalAmount * titanoPrice | scaleNumber}} {{currency.symbol}})!
+            (~ {{dataSource[dataSource.length - 1].finalAmount * model.advanced.cryptoPrice | scaleNumber}} {{currency.symbol}}
+            )!
             <div fxHide fxShow.lt-sm>Note: click on one row, to see the details of the corresponding period.</div>
           </div>
           <table mat-table [dataSource]="dataSource" fxShow fxHide.lt-sm>
@@ -113,9 +114,11 @@
           <div fxHide fxShow.lt-sm>
             <b>️Assuming TITANO price won't change:</b>️ on {{dataSource[dataSource.length - 1].to | date: dateFormat}}
             you will have withdraw
-            {{(monthlyWithdrawal ? 12 : 52) * desiredPeriodicWithdraw | numberFormat:0}} {{currency.symbol}}
+            {{estimatedOneYearProfit() | numberFormat:0}} {{currency.symbol}}
             and still have {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} TITANO
-            (worth ~ {{dataSource[dataSource.length - 1].finalAmount * titanoPrice | scaleNumber}} {{currency.symbol}})!
+            (worth
+            ~ {{dataSource[dataSource.length - 1].finalAmount * model.advanced.cryptoPrice | scaleNumber}} {{currency.symbol}}
+            )!
             Note: click on the rows below to see the details.
           </div>
           <table mat-table [dataSource]="dataSource" multiTemplateDataRows fxHide fxShow.lt-sm>
@@ -140,13 +143,14 @@
                 <div class="row-detail"
                      [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
                   During the period from {{row.from | date: shortDateFormat}} to {{row.to | date: shortDateFormat}} your
-                  crypto wallet, after withdrawing {{desiredPeriodicWithdraw}}
-                  {{currency.symbol}}/{{monthlyWithdrawal ? 'Month' : ' Week'}}, will
+                  crypto wallet, after withdrawing {{model.desiredPeriodicAmountToWithdraw}}
+                  {{currency.symbol}}/{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod, true)}}, will
                   contain {{row.finalAmount | numberFormat}} TITANO, for a value
-                  of {{row.finalAmount * titanoPrice | numberFormat}}{{currency.symbol}}.
+                  of {{row.finalAmount * model.advanced.cryptoPrice | numberFormat}}{{currency.symbol}}.
                 </div>
               </td>
             </ng-container>
+
 
             <tr mat-header-row *matHeaderRowDef="mobileColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: mobileColumns;"

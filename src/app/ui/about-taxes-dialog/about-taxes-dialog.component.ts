@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {WithdrawalPeriod} from '../../services/WithdrawalPeriod';
 
 @Component({
   selector: 'app-about-taxes-dialog',
@@ -16,9 +17,17 @@ export class AboutTaxesDialogComponent {
   closeDialog() {
     this.dialogRef.close({})
   }
+
+  uppercasePeriod() {
+    return WithdrawalPeriod.toStringAdjective(this.data.withdrawalPeriod, true);
+  }
+
+  lowercasePeriod() {
+    return WithdrawalPeriod.toStringAdjective(this.data.withdrawalPeriod);
+  }
 }
 
 export interface AboutTaxesDialogComponentData {
   symbol: string
-  monthlyWithdrawal: boolean
+  withdrawalPeriod: WithdrawalPeriod
 }

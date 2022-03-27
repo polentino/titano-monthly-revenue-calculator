@@ -17,6 +17,7 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
+import {CalculatorService} from "./services/CalculatorService";
 import {CoinMarketCapService} from "./services/CoinMarketCapService";
 import {AboutTaxesDialogComponent} from './ui/about-taxes-dialog/about-taxes-dialog.component';
 import {BuyMeABeerComponent} from './ui/buy-me-a-beer/buy-me-a-beer.component';
@@ -49,7 +50,10 @@ import {PipesModule} from "./ui/pipes/pipes.module";
     MatCheckboxModule,
     PipesModule
   ],
-  providers: [CoinMarketCapService],
+  providers: [
+    CalculatorService,
+    CoinMarketCapService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

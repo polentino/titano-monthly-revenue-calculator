@@ -1,4 +1,6 @@
 import {Injectable} from '@angular/core';
+import {CalculatorData} from "./CalculatorData";
+import {WithdrawalPeriod} from './WithdrawalPeriod';
 
 @Injectable({providedIn: 'any'})
 export class CalculatorService {
@@ -9,7 +11,7 @@ export class CalculatorService {
     const taxes = data.countryTaxesCalculationEnabled ? 100 / (100 - data.countryTaxes) : 1;
     const beforeTax = (data.desiredPeriodicAmountToWithdraw / data.advanced.cryptoPrice) * taxes;
     // 142,85 / (100 - 18) * 100 = 174,21 => amount that was subject to slippage
-    return beforeTax * 100 / (100 - (data.advanced.contractSellFeePct + data.slippageFeePct));
+    return beforeTax * 100 / (100 - (data.advanced.contractSellFeesPct + data.slippageFeesPct));
   }
 
   daysNeeded(data: CalculatorData) {
@@ -20,7 +22,7 @@ export class CalculatorService {
     const averageHalfHourRevenue = (this.amountBeforeFeesAndTaxes(data) / CalculatorService.periodToDays(data)) / dailyCompoundPeriods;
     const singlePeriodAPY = data.advanced.periodAPY;
 
-    // but when will you hit that magic average value? need to solve an equation on Compound at periond N and N+1
+    // but when will you hit that magic average value? need to solve an equation on Compound at period N and N+1
     const n = Math.log(averageHalfHourRevenue / (data.initialCryptoCapital * singlePeriodAPY))
     const d = Math.log(1 + singlePeriodAPY)
     const days = Math.ceil((n / d) / dailyCompoundPeriods)
@@ -76,6 +78,10 @@ export class CalculatorService {
     return balanceAnalysis;
   }
 
+  estimatedOneYearProfit(data: CalculatorData) {
+    return CalculatorService.periodsInYear(data) * data.desiredPeriodicAmountToWithdraw;
+  }
+
   private static periodToDays(data: CalculatorData) {
     switch (data.withdrawalPeriod) {
       case WithdrawalPeriod.DAILY:
@@ -99,30 +105,6 @@ export class CalculatorService {
   }
 }
 
-export enum WithdrawalPeriod {
-  DAILY,
-  WEEKLY,
-  MONTHLY
-}
-
-export interface AdvancedCalculatorData {
-  compoundMinutes: number
-  periodAPY: number
-  cryptoPrice: number
-  // todo: these are the REAL slippage fees, which every contract sets to a different value
-  contractSellFeePct: number
-}
-
-export interface CalculatorData {
-  withdrawalPeriod: WithdrawalPeriod
-  desiredPeriodicAmountToWithdraw: number
-  slippageFeePct: number
-  initialCryptoCapital: number
-  countryTaxes: number
-  countryTaxesCalculationEnabled: boolean
-  advanced: AdvancedCalculatorData
-}
-
 export interface BalanceRow {
   idx: number;
   // todo: do not use Date, but rather, days increment. it will make testing easier
@@ -133,3 +115,18 @@ export interface BalanceRow {
   finalAmount: number;
   value: number
 }
+
+export const TITANO_DATA: CalculatorData = {
+  withdrawalPeriod: WithdrawalPeriod.MONTHLY,
+  desiredPeriodicAmountToWithdraw: 100,
+  slippageFeesPct: 1,
+  initialCryptoCapital: 1000,
+  countryTaxes: 30,
+  countryTaxesCalculationEnabled: false,
+  advanced: {
+    compoundMinutes: 30,
+    periodAPY: 0.0003958, // from TITANO website
+    cryptoPrice: 0.157907,
+    contractSellFeesPct: 18
+  }
+};

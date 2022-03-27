@@ -18,6 +18,7 @@
     "import"
   ],
   "rules": {
+    "@typescript-eslint/no-namespace": "off",
     "sort-imports": [
       "error",
       {

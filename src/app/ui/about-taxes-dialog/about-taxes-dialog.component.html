@@ -7,9 +7,9 @@
     The calculator will therefore assume that the amount you want to withdraw is <b>after taxes</b>.
   </p>
   <p>
-    Example: if you want to withdraw 700{{data.symbol}}/{{data.monthlyWithdrawal ? 'Month' : 'Week'}}, and your
+    Example: if you want to withdraw 700{{data.symbol}}/{{uppercasePeriod()}}, and your
     Country's taxes amount to 30%, then the calculator will internally ensure your gross income will be,
-    every {{data.monthlyWithdrawal ? 'month' : 'week'}}, about 1000{{data.symbol}}.
+    every {{lowercasePeriod()}}, about 1000{{data.symbol}}.
   </p>
   <p>
     <mat-checkbox [(ngModel)]="doNotShowAgain">do not show this dialog again</mat-checkbox>
