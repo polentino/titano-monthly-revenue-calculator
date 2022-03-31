@@ -7,6 +7,7 @@ describe('CalculatorService', () => {
   const testData: CalculatorData = {
     withdrawalPeriod: WithdrawalPeriod.WEEKLY,
     desiredPeriodicAmountToWithdraw: 100,
+    startDate: new Date(),
     slippageFeesPct: 2,
     initialCryptoCapital: 1000,
     cryptoPrice: 1, // made up value :)
@@ -77,13 +78,23 @@ describe('CalculatorService', () => {
       data.desiredPeriodicAmountToWithdraw = 500;
       const balance = service.oneYearBalance(data);
 
-      expectBalance(balance[0], 22, 2736.5992, 4431.0397);
-      expectBalance(balance[12], 394, 2476000.5535, 4460970.6589);
+      expectBalance(balance[0], data.startDate, 22, 2736.5992, 4431.0397);
+      expectBalance(balance[12], data.startDate, 394, 2476000.5535, 4460970.6589);
+    });
+    it('to withdraw 500$ net monthly, with 1000$ capital 10 days ago, sell taxes are 20%, Country taxes are 30%, the 1-Year balance is', () => {
+      const data = CalculatorData.clone(testData);
+      data.withdrawalPeriod = WithdrawalPeriod.MONTHLY;
+      data.startDate = data.startDate.minusDays(10);
+      data.desiredPeriodicAmountToWithdraw = 500;
+      const balance = service.oneYearBalance(data);
+
+      expectBalance(balance[0], data.startDate, 22, 2736.5992, 4431.0397);
+      expectBalance(balance[12], data.startDate,394, 2476000.5535, 4460970.6589);
     });
   });
 
-  function expectBalance(row: BalanceRow, days: number, expectedInitialAmount: number, expectedFinalAmount: number) {
-    const firstPeriodStart = (new Date()).plusDays(days);
+  function expectBalance(row: BalanceRow, startDate: Date, days: number, expectedInitialAmount: number, expectedFinalAmount: number) {
+    const firstPeriodStart = startDate.plusDays(days);
     firstPeriodStart.setHours(0, 0, 0, 0);
     const firstPeriodEnd = firstPeriodStart.plusDays(31);
     firstPeriodEnd.setHours(0, 0, 0, 0);

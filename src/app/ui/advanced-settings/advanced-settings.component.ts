@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
-import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
 
 @Component({
   selector: 'app-advanced-settings',

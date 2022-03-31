@@ -31,7 +31,19 @@ export class CalculatorService {
   }
 
   firstWithdrawalDate(data: CalculatorData) {
-    return (new Date()).plusDays(this.daysNeeded(data));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const calculationDate = data.startDate.clone();
+    calculationDate.setHours(0, 0, 0, 0);
+    const daysNeeded = this.daysNeeded(data);
+
+    if (calculationDate.getTime() >= today.getTime()) {
+      return today.plusDays(daysNeeded);
+    } else {
+      const daysBetween = today.daysBetween(calculationDate);
+      const daysLeft = daysNeeded - daysBetween;
+      return daysLeft >= 0 ? today.plusDays(daysLeft) : today.minusDays(-daysLeft);
+    }
   }
 
   oneYearBalance(data: CalculatorData): Array<BalanceRow> {
@@ -118,9 +130,10 @@ export interface BalanceRow {
 
 export const TITANO_DATA: CalculatorData = {
   withdrawalPeriod: WithdrawalPeriod.MONTHLY,
-  desiredPeriodicAmountToWithdraw: 100,
+  desiredPeriodicAmountToWithdraw: 1000,
+  startDate: new Date(),
   slippageFeesPct: 1,
-  initialCryptoCapital: 1000,
+  initialCryptoCapital: 2000,
   cryptoPrice: 0.157907,
   countryTaxes: 30,
   countryTaxesCalculationEnabled: false,

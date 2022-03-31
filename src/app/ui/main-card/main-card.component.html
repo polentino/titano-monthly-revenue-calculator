@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-title>Titano Periodic Revenue Calculator</mat-card-title>
-  <mat-card-subtitle>Helps you estimate monthly/weekly profit taking, in a sustainable way</mat-card-subtitle>
+  <mat-card-subtitle>Helps you estimate recurring profit taking, in a sustainable way</mat-card-subtitle>
   <mat-card-content>
     <div class="small-chips-main">
       <div>
@@ -23,13 +23,19 @@
     <label>
       My wallet contains <input [(ngModel)]="model.initialCryptoCapital" type="number" min="0"/>
     </label>
+    {{model.advanced.name.toUpperCase()}}
     <label>
-      {{model.advanced.name.toUpperCase()}}, with current price of
-      <input [(ngModel)]="model.cryptoPrice" type="number" min="0"/>
-      {{this.currency.symbol}}/{{model.advanced.name.toUpperCase()}}, and
+      on date
+      <input matInput [matDatepicker]="picker" [(ngModel)]="model.startDate" [min]="november2021" [max]="today()">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </label>
+
+    <label>, with unit price of <input [(ngModel)]="model.cryptoPrice" type="number" min="0" step="0.0001"/>
+      {{this.currency.symbol}}/{{model.advanced.name.toUpperCase()}},
     </label>
     <label>
-      I assume slippage fees of <input [(ngModel)]="model.slippageFeesPct" type="number" min="0" max="100"/>(%).
+      and I assume slippage fees of <input [(ngModel)]="model.slippageFeesPct" type="number" min="0" max="100"/>(%).
     </label>
     <mat-checkbox class="example-margin" [(ngModel)]="taxesCalculationEnabled" [color]="'primary'">
       Also include my Country's taxes
@@ -39,6 +45,8 @@
              max="100"/>(%) of the gross income.
     </label>
 
+    <p></p>
+
     <mat-accordion>
       <mat-expansion-panel [expanded]="true">
         <mat-expansion-panel-header>
@@ -46,14 +54,14 @@
         </mat-expansion-panel-header>
 
         <p>
-          As of today, with a wallet containing {{model.initialCryptoCapital}} {{model.advanced.name.toUpperCase()}}, if
+          Starting from {{model.startDate | date: dateFormat}}, with a wallet
+          containing {{model.initialCryptoCapital}} {{model.advanced.name.toUpperCase()}}, if
           you want to withdraw {{model.desiredPeriodicAmountToWithdraw}} {{currency.symbol}}
           /{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod, true)}}
           <b>{{model.countryTaxesCalculationEnabled ? ' after taxes' : ''}}</b>,
           meaning {{periodicTitanoWithdrawal() | numberFormat}}
           {{model.advanced.name.toUpperCase()}}/{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod, true)}}
-          gross, you will need to wait until <b>{{firstWithdrawalDate() | date: dateFormat}}</b>, that is,
-          <b>{{daysNeeded()}} days from today </b>.
+          gross, you will need to wait until <b>{{firstWithdrawalDate() | date: dateFormat}}</b>.
         </p>
       </mat-expansion-panel>
 
@@ -161,6 +169,8 @@
     </mat-accordion>
 
     <p></p>
+    <button mat-stroked-button color="primary">▽ DOWNLOAD BREAKDOWN AS .CVS</button>
+    <p></p>
     <p *ngIf="titanoSettingsInUse">
       ⚠️NOTE⚠️ This site isn't affiliated in any way with TITANO.finance. Predictions presented here are not
       financial advice, and you must do your own due diligence before investing in any asset.
@@ -172,9 +182,11 @@
   </mat-card-content>
 
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="openHowItWorksDialog()" matTooltip="How it works">HOW IT WORKS</button>
+    <button mat-raised-button color="primary" (click)="openHowItWorksDialog()" matTooltip="How it works">HOW IT WORKS
+    </button>
     <button mat-raised-button color="warn" (click)="openAdvancedSettings()" matTooltip="Advanced settings">⚙️</button>
-    <button mat-raised-button color="primary" (click)="openBuyMeABeerDialog()" matTooltip="Buy me a beer 🍺">DONATE 🍺</button>
+    <button mat-raised-button color="primary" (click)="openBuyMeABeerDialog()" matTooltip="Buy me a beer 🍺">DONATE 🍺
+    </button>
   </mat-card-actions>
 </mat-card>
 

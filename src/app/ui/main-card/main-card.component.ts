@@ -11,6 +11,7 @@ import {AboutTaxesDialogComponent} from '../about-taxes-dialog/about-taxes-dialo
 import {AdvancedSettingsComponent} from '../advanced-settings/advanced-settings.component';
 import {BuyMeABeerComponent} from '../buy-me-a-beer/buy-me-a-beer.component';
 import '../../utils/utils'
+import {AdvancedCalculatorData} from "../../services/AdvancedCalculatorData";
 
 @Component({
   selector: 'app-main-card',
@@ -32,6 +33,13 @@ export class MainCardComponent implements DoCheck {
   WithdrawalPeriod = WithdrawalPeriod; // damn TS DI
   titanoSettingsInUse = true;
   doNotShowAgain = false;
+  november2021 = new Date(2021, 10, 1)
+
+  today(): Date {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  }
 
   set taxesCalculationEnabled(value: boolean) {
     this.model.countryTaxesCalculationEnabled = value;
@@ -72,19 +80,7 @@ export class MainCardComponent implements DoCheck {
   }
 
   ngDoCheck(): void {
-    if (
-      this.model.withdrawalPeriod != this.previousModel.withdrawalPeriod ||
-      this.model.desiredPeriodicAmountToWithdraw != this.previousModel.desiredPeriodicAmountToWithdraw ||
-      this.model.slippageFeesPct != this.previousModel.slippageFeesPct ||
-      this.model.initialCryptoCapital != this.previousModel.initialCryptoCapital ||
-      this.model.cryptoPrice != this.previousModel.cryptoPrice ||
-      this.model.countryTaxes != this.previousModel.countryTaxes ||
-      this.model.countryTaxesCalculationEnabled != this.previousModel.countryTaxesCalculationEnabled ||
-      this.model.advanced.compoundMinutes != this.previousModel.advanced.compoundMinutes ||
-      this.model.advanced.name != this.previousModel.advanced.name ||
-      this.model.advanced.periodAPY != this.previousModel.advanced.periodAPY ||
-      this.model.advanced.contractSellFeesPct != this.previousModel.advanced.contractSellFeesPct
-    ) {
+    if (JSON.stringify(this.model) != JSON.stringify(this.previousModel)) { // ...
       this.previousModel = CalculatorData.clone(this.model);
       this.dataSource = this.oneYearBalance();
     }
@@ -116,12 +112,8 @@ export class MainCardComponent implements DoCheck {
     return this.calculatorService.amountBeforeFeesAndTaxes(this.model);
   }
 
-  daysNeeded() {
-    return this.calculatorService.daysNeeded(this.model);
-  }
-
   firstWithdrawalDate() {
-    return (new Date()).plusDays(this.daysNeeded());
+    return this.calculatorService.firstWithdrawalDate(this.model);
   }
 
   oneYearBalance() {
@@ -147,14 +139,8 @@ export class MainCardComponent implements DoCheck {
       data: dialogModel
     });
 
-    ref.afterClosed().subscribe(newSettings => {
-      if (newSettings === undefined || (
-        // screw it, why `newSettings == TITANO_DATA.advanced` doesn't work
-        newSettings.name == TITANO_DATA.advanced.name &&
-        newSettings.compoundMinutes == TITANO_DATA.advanced.compoundMinutes &&
-        newSettings.periodAPY == TITANO_DATA.advanced.periodAPY &&
-        newSettings.contractSellFeesPct == TITANO_DATA.advanced.contractSellFeesPct
-      )) {
+    ref.afterClosed().subscribe((newSettings: AdvancedCalculatorData) => {
+      if (newSettings === undefined || (JSON.stringify(newSettings) == JSON.stringify(TITANO_DATA.advanced))) {
         this.titanoSettingsInUse = true;
         this.model.advanced = {...TITANO_DATA.advanced};
       } else {

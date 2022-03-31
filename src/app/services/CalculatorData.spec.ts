@@ -2,9 +2,12 @@ import {CalculatorData} from './CalculatorData';
 import {WithdrawalPeriod} from './WithdrawalPeriod';
 
 describe('CalculatorData', () => {
+  const firstDate = new Date(2020, 10, 3);
+  const secondDate = new Date(2022, 10, 3);
   const testData: CalculatorData = {
     withdrawalPeriod: WithdrawalPeriod.WEEKLY,
     desiredPeriodicAmountToWithdraw: 100,
+    startDate: firstDate,
     slippageFeesPct: 2,
     initialCryptoCapital: 1000,
     cryptoPrice: 1, // made up value :)
@@ -22,6 +25,7 @@ describe('CalculatorData', () => {
     const cloned = CalculatorData.clone(testData);
     cloned.withdrawalPeriod = WithdrawalPeriod.MONTHLY;
     cloned.desiredPeriodicAmountToWithdraw = 0;
+    cloned.startDate = secondDate;
     cloned.slippageFeesPct = 0;
     cloned.initialCryptoCapital = 0;
     cloned.cryptoPrice = 0;
@@ -36,6 +40,7 @@ describe('CalculatorData', () => {
 
       expect(testData.withdrawalPeriod).toEqual(WithdrawalPeriod.WEEKLY);
       expect(testData.desiredPeriodicAmountToWithdraw).toEqual(100);
+      expect(testData.startDate).toEqual(firstDate);
       expect(testData.slippageFeesPct).toEqual(2);
       expect(testData.initialCryptoCapital).toEqual(1000);
       expect(testData.cryptoPrice).toEqual(1);
@@ -48,6 +53,7 @@ describe('CalculatorData', () => {
 
       expect(cloned.withdrawalPeriod).toEqual(WithdrawalPeriod.MONTHLY);
       expect(cloned.desiredPeriodicAmountToWithdraw).toEqual(0);
+      expect(cloned.startDate).toEqual(secondDate);
       expect(cloned.slippageFeesPct).toEqual(0);
       expect(cloned.initialCryptoCapital).toEqual(0);
       expect(cloned.cryptoPrice).toEqual(0);

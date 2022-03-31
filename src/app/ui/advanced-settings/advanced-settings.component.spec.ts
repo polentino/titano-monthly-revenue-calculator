@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {AdvancedSettingsComponent} from './advanced-settings.component';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {AdvancedSettingsComponent} from './advanced-settings.component';
 
 describe('AdvancedSettingsComponent', () => {
   let component: AdvancedSettingsComponent;

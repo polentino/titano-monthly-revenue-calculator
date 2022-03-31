@@ -4,6 +4,7 @@ import {WithdrawalPeriod} from './WithdrawalPeriod';
 export interface CalculatorData {
   withdrawalPeriod: WithdrawalPeriod;
   desiredPeriodicAmountToWithdraw: number;
+  startDate: Date;
   slippageFeesPct: number;
   initialCryptoCapital: number;
   cryptoPrice: number
