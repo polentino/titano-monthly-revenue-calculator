@@ -27,6 +27,7 @@ import {CoinMarketCapService} from './services/CoinMarketCapService';
 import {AboutTaxesDialogComponent} from './ui/about-taxes-dialog/about-taxes-dialog.component';
 import {AdvancedSettingsComponent} from './ui/advanced-settings/advanced-settings.component';
 import {BuyMeABeerComponent} from './ui/buy-me-a-beer/buy-me-a-beer.component';
+import {DownloadBreakdownComponent} from './ui/download-breakdown/download-breakdown.component';
 import {MainCardComponent} from './ui/main-card/main-card.component';
 import {PipesModule} from './ui/pipes/pipes.module';
 
@@ -36,7 +37,8 @@ import {PipesModule} from './ui/pipes/pipes.module';
     MainCardComponent,
     BuyMeABeerComponent,
     AboutTaxesDialogComponent,
-    AdvancedSettingsComponent
+    AdvancedSettingsComponent,
+    DownloadBreakdownComponent
   ],
   imports: [
     BrowserModule,

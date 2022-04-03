@@ -1,7 +1,10 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Component, DoCheck} from '@angular/core';
+import {formatDate} from '@angular/common';
+import {Component, DoCheck, Inject, LOCALE_ID} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import * as XLSX from 'xlsx';
+import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
 import {CalculatorData} from '../../services/CalculatorData';
 import {BalanceRow, CalculatorService, TITANO_DATA} from '../../services/CalculatorService';
 import {CoinMarketCapCurrencies} from '../../services/CoinMarketCapCurrencies';
@@ -10,8 +13,9 @@ import {WithdrawalPeriod} from '../../services/WithdrawalPeriod';
 import {AboutTaxesDialogComponent} from '../about-taxes-dialog/about-taxes-dialog.component';
 import {AdvancedSettingsComponent} from '../advanced-settings/advanced-settings.component';
 import {BuyMeABeerComponent} from '../buy-me-a-beer/buy-me-a-beer.component';
+import {DownloadBreakdownComponent} from '../download-breakdown/download-breakdown.component';
 import '../../utils/utils'
-import {AdvancedCalculatorData} from "../../services/AdvancedCalculatorData";
+
 
 @Component({
   selector: 'app-main-card',
@@ -70,6 +74,7 @@ export class MainCardComponent implements DoCheck {
   newExpandedElement: BalanceRow | null | undefined;
 
   constructor(
+    @Inject(LOCALE_ID) private locale: string,
     private calculatorService: CalculatorService,
     private cmcService: CoinMarketCapService,
     private dialog: MatDialog,
@@ -151,4 +156,59 @@ export class MainCardComponent implements DoCheck {
       this.dataSource = this.oneYearBalance();
     });
   }
+
+  download() {
+    const ref = this.dialog.open(DownloadBreakdownComponent, {
+      disableClose: true,
+      data: this.dataSource
+    });
+
+    ref.afterClosed().subscribe((format: string) => {
+      if (format === undefined) return;
+      const wb = XLSX.utils.book_new();
+      const rows = this.dataSource.map(s => ({
+        f: formatDate(s.from, format, this.locale),
+        ia: `${s.initialAmount}`,
+        t: formatDate(s.to, format, this.locale),
+        fa: `${s.finalAmount}`,
+        v: `${s.value}`
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+
+      if (!wb.Props) wb.Props = {};
+      wb.Props.Author = 'polentino911';
+      wb.Props.CreatedDate = new Date();
+
+      worksheet["!cols"] = [
+        {wch: this.count(rows, p => p.f)},
+        {wch: this.count(rows, p => p.ia)},
+        {wch: this.count(rows, p => p.t)},
+        {wch: this.count(rows, p => p.fa)},
+        {wch: this.count(rows, p => p.v)}
+      ];
+
+      XLSX.utils.book_append_sheet(wb, worksheet, `1-Year Estimation`);
+      XLSX.utils.sheet_add_aoa(worksheet, [[
+          'From',
+          `Initial Amount (${this.model.advanced.name})`,
+          'To',
+          `Final Amount (${this.model.advanced.name})`,
+          `Value (${this.currency.symbol})`]],
+        {origin: 'A1'});
+      XLSX.writeFile(wb, `analysis_of_${this.model.initialCryptoCapital}_${this.model.advanced.name}_on_${formatDate(this.model.startDate, 'dd_MMM_YYYY', this.locale)}.xlsx`);
+    });
+  }
+
+  private count(struct: Row[], selector: (p: Row) => string) {
+    return struct.reduce((w, r) => Math.max(w, selector(r).length), 10) + 2;
+  }
+}
+
+interface Row {
+  f: string;
+  ia: string;
+  t: string;
+  fa: string;
+  v: string
 }

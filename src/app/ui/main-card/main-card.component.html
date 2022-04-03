@@ -80,7 +80,7 @@
             more importantly, <b>your {{model.advanced.name.toUpperCase()}} wallet will keep increasing up
             to {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} {{model.advanced.name.toUpperCase()}}</b>
             (~ {{dataSource[dataSource.length - 1].finalAmount * model.cryptoPrice | scaleNumber}} {{currency.symbol}})!
-            <div fxHide fxShow.lt-sm>Note: click on one row, to see the details of the corresponding period.</div>
+            <u><a (click)="download()" class="download-sheet">Click here to download the data as Excel sheet.</a></u>
           </div>
           <table mat-table [dataSource]="dataSource" fxShow fxHide.lt-sm>
 
@@ -125,6 +125,7 @@
             ~ {{dataSource[dataSource.length - 1].finalAmount * model.cryptoPrice | scaleNumber}} {{currency.symbol}}
             )!
             Note: click on the rows below to see the details.
+            <u><a (click)="download()" class="download-sheet">Touch here to download the data as Excel sheet.</a></u>
           </div>
           <table mat-table [dataSource]="dataSource" multiTemplateDataRows fxHide fxShow.lt-sm>
 
@@ -168,8 +169,6 @@
       </mat-expansion-panel>
     </mat-accordion>
 
-    <p></p>
-    <button mat-stroked-button color="primary">▽ DOWNLOAD BREAKDOWN AS .CVS</button>
     <p></p>
     <p *ngIf="titanoSettingsInUse">
       ⚠️NOTE⚠️ This site isn't affiliated in any way with TITANO.finance. Predictions presented here are not
