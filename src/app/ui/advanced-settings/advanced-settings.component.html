@@ -1,16 +1,18 @@
-<h2 mat-dialog-title>Advanced Settings - Proceed only if you know what you're doing</h2>
+<h2 mat-dialog-title fxShow fxHide.lt-sm>Advanced Settings - Proceed only if you know what you're doing</h2>
 <mat-dialog-content>
-  <p>
+  <p fxShow fxHide.lt-sm>
     By modifying these fields you won't get a correct estimation of profit-taking/capital growth for TITANO, but you
     can get the estimation of TITANO forks such LIBERO or SAFUU. <b>NOTE:</b> no CoinMarketCap quote retrieval is
     implemented. If some parameter is missing, you're encouraged to
     <a href="https://github.com/polentino/titano-monthly-revenue-calculator" target="_blank">fork my project</a>, add
     what's missing, and submit a PR. PRs are always welcome <3
   </p>
-  <mat-form-field>
-    <mat-label>Name of the cryptocurrency</mat-label>
-    <input matInput [(ngModel)]="model.name" type="text" minlength="2" maxlength="16" placeholder="TITANO"/>
-  </mat-form-field>
+  <p fxHide fxShow.lt-sm>
+    <b>Warning:</b> If you tweak these parameters, you are going to simulate TITANO forks like LIBERO/SAFUU/...
+    (no CMC quote retrieval though). Some parameter is missing? Please
+    <a href="https://github.com/polentino/titano-monthly-revenue-calculator" target="_blank">fork my project</a> and
+    submit a PR <3
+  </p>
   <mat-form-field>
     <mat-label>Compounding interval, in minutes</mat-label>
     <input matInput [(ngModel)]="model.compoundMinutes" type="number" min="0" step="1" placeholder="30"/>
@@ -20,15 +22,15 @@
     <input matInput [(ngModel)]="model.periodAPY" type="number" min="0" placeholder="0.0003958"/>
   </mat-form-field>
   <mat-form-field>
-    <mat-label>Contract sell fees ,sometimes referred as sell taxes, in %</mat-label>
+    <mat-label>Sell fees (aka Sell Taxes), in %</mat-label>
     <input matInput [(ngModel)]="model.contractSellFeesPct" type="number" min="0" max="100" placeholder="18"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Name of the cryptocurrency</mat-label>
+    <input matInput [(ngModel)]="model.name" type="text" minlength="2" maxlength="16" placeholder="TITANO"/>
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-raised-button class="full-width" color="warn" [mat-dialog-close]="model">
-    APPLY
-  </button>
-  <button mat-raised-button class="full-width" color="primary" [mat-dialog-close]="undefined">
-    USE TITANO SETTINGS
-  </button>
+  <button mat-raised-button class="full-width" color="warn" [mat-dialog-close]="model">APPLY</button>
+  <button mat-raised-button class="full-width" color="primary" [mat-dialog-close]="undefined">{{revertText()}}</button>
 </mat-dialog-actions>
