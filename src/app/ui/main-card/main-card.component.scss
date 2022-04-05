@@ -1,25 +1,8 @@
-.small-chips-main {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  flex-wrap: wrap;
 
-  .small-chips {
-    display: contents !important;
-  }
 
-  .mat-select {
-    margin-left: 10px;
-    width: 60px;
-  }
-
-  mat-chip {
-    min-height: unset;
-  }
-
-  mat-chip:first-child {
-    margin-left: 10px;
-  }
+.mat-select {
+  margin-left: 10px;
+  width: 60px;
 }
 
 mat-select {

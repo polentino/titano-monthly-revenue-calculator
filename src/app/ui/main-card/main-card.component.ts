@@ -38,6 +38,7 @@ export class MainCardComponent implements DoCheck {
   titanoSettingsInUse = true;
   doNotShowAgain = false;
   november2021 = new Date(2021, 10, 1)
+  private titanoAdvancedData = JSON.stringify(TITANO_DATA.advanced);
 
   today(): Date {
     const today = new Date();
@@ -71,7 +72,6 @@ export class MainCardComponent implements DoCheck {
   displayedColumns: string[] = ['from', 'initialAmount', 'to', 'finalAmount', 'value'];
   mobileColumns: string[] = ['to', 'finalAmount', 'value'];
   dataSource: BalanceRow[] = [];
-  newExpandedElement: BalanceRow | null | undefined;
 
   constructor(
     @Inject(LOCALE_ID) private locale: string,
@@ -145,7 +145,7 @@ export class MainCardComponent implements DoCheck {
     });
 
     ref.afterClosed().subscribe((newSettings: AdvancedCalculatorData) => {
-      if (newSettings === undefined || (JSON.stringify(newSettings) == JSON.stringify(TITANO_DATA.advanced))) {
+      if (newSettings === undefined || (JSON.stringify(newSettings) == this.titanoAdvancedData)){
         this.titanoSettingsInUse = true;
         this.model.advanced = {...TITANO_DATA.advanced};
       } else {
