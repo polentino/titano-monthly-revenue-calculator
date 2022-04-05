@@ -3,16 +3,17 @@
   <div>
     If you've found this useful despite my crappy webdev skills, a beer as a token of appreciation is very welcome 🍺
   </div>
-  <div>
+  <p>
     You can donate (BSC/ETH) to the following address:
-    <div class="typewriter">
-      <h1>0x26b9ee3E56E11D740347738825e5e8c6940cF1aA</h1>
-    </div>
+  </p>
+  <div class="typewriter">
+    <p>0x26b9ee3E56E11D740347738825e5e8c6940cF1aA</p>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close="">Close</button>
-  <button mat-raised-button color="primary" mat-dialog-close="" (click)="sayThankYou()" [cdkCopyToClipboard]='getAddress()'>
+  <button mat-raised-button color="primary" mat-dialog-close="" (click)="sayThankYou()"
+          [cdkCopyToClipboard]='getAddress()'>
     Copy Address
   </button>
 </mat-dialog-actions>
