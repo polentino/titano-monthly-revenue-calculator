@@ -12,11 +12,31 @@ body {
   background-color: #00020B;
 }
 
-.mat-typography {
-  width: 90vw;
-  margin-left: auto;
-  margin-right: auto;
-  height: 100vh;
-  display: flex;
-  align-items: center;
+/* ----------- Non-Retina Screens ----------- */
+@media screen
+and (min-device-width: 960px)
+and (-webkit-min-device-pixel-ratio: 1) {
+  .mat-card-centered {
+    width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* ----------- Retina Screens ----------- */
+@media screen
+and (min-device-width: 960px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (min-resolution: 192dpi) {
+  .mat-card-centered {
+    width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+  }
 }
