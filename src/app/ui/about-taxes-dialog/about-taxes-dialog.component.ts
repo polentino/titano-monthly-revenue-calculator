@@ -15,11 +15,11 @@ export class AboutTaxesDialogComponent {
   }
 
   uppercasePeriod() {
-    return WithdrawalPeriod.toStringAdjective(this.data.withdrawalPeriod, true);
+    return WithdrawalPeriod.toStringNoun(this.data.withdrawalPeriod, true);
   }
 
   lowercasePeriod() {
-    return WithdrawalPeriod.toStringAdjective(this.data.withdrawalPeriod);
+    return WithdrawalPeriod.toStringNoun(this.data.withdrawalPeriod);
   }
 }
 
