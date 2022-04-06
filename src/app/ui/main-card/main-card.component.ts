@@ -99,9 +99,9 @@ export class MainCardComponent implements DoCheck {
     const c = this.currency;
     this.cmcService.getQuote(c)
       .subscribe(data => {
-          // todo ensure we catch errors!
-          const price = Object.values(data.data.points).pop().v[0];
-          this.model.cryptoPrice = price;
+          const point = Object.values(data.data.points).pop();
+          // of course, USD is handled in its own, special way :/
+          this.model.cryptoPrice = c.id === 2781 ? point.v[0] : point.c[0];
         },
         error => {
           console.error(error);
@@ -145,7 +145,7 @@ export class MainCardComponent implements DoCheck {
     });
 
     ref.afterClosed().subscribe((newSettings: AdvancedCalculatorData) => {
-      if (newSettings === undefined || (JSON.stringify(newSettings) == this.titanoAdvancedData)){
+      if (newSettings === undefined || (JSON.stringify(newSettings) == this.titanoAdvancedData)) {
         this.titanoSettingsInUse = true;
         this.model.advanced = {...TITANO_DATA.advanced};
       } else {
