@@ -56,15 +56,13 @@
         and I assume slippage fees of <input [(ngModel)]="model.slippageFeesPct" type="number" min="0" max="100"/>(%).
       </label>
     </div>
-    <ng-container *ngIf="model.profitType == ProfitType.FIXED_AMOUNT">
-      <mat-checkbox class="example-margin" [(ngModel)]="taxesCalculationEnabled" [color]="'primary'">
-        Also include my Country's taxes
-      </mat-checkbox>
-      <label [class]="model.countryTaxesCalculationEnabled ? 'enabled' : 'disabled'">, which amounts to
-        <input [disabled]="!model.countryTaxesCalculationEnabled" [(ngModel)]="model.countryTaxes" type="number" min="0"
-               max="100"/>(%) of the gross income.
-      </label>
-    </ng-container>
+    <mat-checkbox class="example-margin" [(ngModel)]="taxesCalculationEnabled" [color]="'primary'">
+      Also include my Country's taxes
+    </mat-checkbox>
+    <label [class]="model.countryTaxesCalculationEnabled ? 'enabled' : 'disabled'">, which amounts to
+      <input [disabled]="!model.countryTaxesCalculationEnabled" [(ngModel)]="model.countryTaxes" type="number" min="0"
+             max="100"/>(%) of the gross income.
+    </label>
 
     <p></p>
 

@@ -30,12 +30,12 @@ describe('CalculatorService', () => {
       const balance = service.oneYearBalance(testData);
 
       expect(balance.length).toBe(13);
-      expectBalance(balance[0], testData.startDate, 0, 2000, 3451.4136);
-      expectBalance(balance[12], testData.startDate, 372, 1395192.4871, 2407693.1661);
+      expectBalance(balance[0], testData.startDate, 0, 2000, 2801.8859, 45.7075);
+      expectBalance(balance[12], testData.startDate, 372, 114307.7105, 160138.5852, 2612.3598);
     });
   });
 
-  function expectBalance(row: BalanceRow, startDate: Date, days: number, expectedInitialAmount: number, expectedFinalAmount: number) {
+  function expectBalance(row: BalanceRow, startDate: Date, days: number, expectedInitialAmount: number, expectedFinalAmount: number, rebases: number) {
     const firstPeriodStart = startDate.plusDays(days);
     firstPeriodStart.setHours(0, 0, 0, 0);
     const firstPeriodEnd = firstPeriodStart.plusDays(31);
@@ -51,5 +51,6 @@ describe('CalculatorService', () => {
 
     expect(row.initialAmount).toBeCloseTo(expectedInitialAmount);
     expect(row.finalAmount).toBeCloseTo(expectedFinalAmount);
+    expect(row.value).toBeCloseTo(rebases);
   }
 });
