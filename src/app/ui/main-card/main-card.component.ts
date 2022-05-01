@@ -5,10 +5,12 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import * as XLSX from 'xlsx';
 import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
+import {CalculatorService} from "../../services/calculator.service";
 import {CalculatorData} from '../../services/CalculatorData';
-import {BalanceRow, CalculatorService, TITANO_DATA} from '../../services/CalculatorService';
 import {CoinMarketCapCurrencies} from '../../services/CoinMarketCapCurrencies';
 import {CoinMarketCapService} from '../../services/CoinMarketCapService';
+import {BalanceRow, EstimatorService, TITANO_DATA} from '../../services/estimator.service';
+import {ProfitType} from "../../services/ProfitType";
 import {WithdrawalPeriod} from '../../services/WithdrawalPeriod';
 import {AboutTaxesDialogComponent} from '../about-taxes-dialog/about-taxes-dialog.component';
 import {AdvancedSettingsComponent} from '../advanced-settings/advanced-settings.component';
@@ -21,7 +23,7 @@ import '../../utils/utils'
   selector: 'app-main-card',
   templateUrl: './main-card.component.html',
   styleUrls: ['./main-card.component.scss'],
-  providers: [CalculatorService, CoinMarketCapService, {provide: Window, useValue: window}],
+  providers: [EstimatorService, CalculatorService, CoinMarketCapService, {provide: Window, useValue: window}],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -35,16 +37,12 @@ export class MainCardComponent implements DoCheck {
   model = CalculatorData.clone(TITANO_DATA);
   withdrawalPeriods = WithdrawalPeriod.values;
   WithdrawalPeriod = WithdrawalPeriod; // damn TS DI
+  profitTypes = ProfitType.values;
+  ProfitType = ProfitType; // damn TS DI - Part 2
   titanoSettingsInUse = true;
   doNotShowAgain = false;
   november2021 = new Date(2021, 10, 1)
   private titanoAdvancedData = JSON.stringify(TITANO_DATA.advanced);
-
-  today(): Date {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return today;
-  }
 
   set taxesCalculationEnabled(value: boolean) {
     this.model.countryTaxesCalculationEnabled = value;
@@ -68,13 +66,13 @@ export class MainCardComponent implements DoCheck {
   expandedElement: BalanceRow | undefined;
   currencies = CoinMarketCapCurrencies.CURRENCIES;
   currency = this.currencies[9];
-
-  displayedColumns: string[] = ['from', 'initialAmount', 'to', 'finalAmount', 'value'];
-  mobileColumns: string[] = ['to', 'finalAmount', 'value'];
+  fixedDesktopColumns = ['from', 'initialAmount', 'to', 'finalAmount'];
+  fixedMobileColumns = ['to', 'finalAmount'];
   dataSource: BalanceRow[] = [];
 
   constructor(
     @Inject(LOCALE_ID) private locale: string,
+    private estimatorService: EstimatorService,
     private calculatorService: CalculatorService,
     private cmcService: CoinMarketCapService,
     private dialog: MatDialog,
@@ -114,19 +112,23 @@ export class MainCardComponent implements DoCheck {
   }
 
   amountBeforeFeesAndTaxes() {
-    return this.calculatorService.amountBeforeFeesAndTaxes(this.model);
+    return this.estimatorService.amountBeforeFeesAndTaxes(this.model);
   }
 
   firstWithdrawalDate() {
-    return this.calculatorService.firstWithdrawalDate(this.model);
+    return this.estimatorService.firstWithdrawalDate(this.model);
   }
 
   oneYearBalance() {
-    return this.calculatorService.oneYearBalance(this.model);
+    if (this.model.profitType == ProfitType.FIXED_AMOUNT) {
+      return this.estimatorService.oneYearBalance(this.model);
+    } else {
+      return this.calculatorService.oneYearBalance(this.model);
+    }
   }
 
   estimatedOneYearProfit() {
-    return this.calculatorService.estimatedOneYearProfit(this.model);
+    return this.estimatorService.estimatedOneYearProfit(this.model);
   }
 
   openHowItWorksDialog() {
@@ -177,7 +179,7 @@ export class MainCardComponent implements DoCheck {
       const worksheet = XLSX.utils.json_to_sheet(rows);
 
       if (!wb.Props) wb.Props = {};
-      wb.Props.Author = 'polentino911';
+      wb.Props.Author = 'https://twitter.com/polentino911';
       wb.Props.CreatedDate = new Date();
 
       worksheet["!cols"] = [
@@ -188,16 +190,41 @@ export class MainCardComponent implements DoCheck {
         {wch: this.count(rows, p => p.v)}
       ];
 
+      const lastColumnName = this.model.profitType == ProfitType.FIXED_AMOUNT ? 'Wallet Value' : 'Rebases Profit';
+
       XLSX.utils.book_append_sheet(wb, worksheet, `1-Year Estimation`);
       XLSX.utils.sheet_add_aoa(worksheet, [[
           'From',
           `Initial Amount (${this.model.advanced.name})`,
           'To',
           `Final Amount (${this.model.advanced.name})`,
-          `Value (${this.currency.symbol})`]],
+          `${lastColumnName} (${this.currency.symbol})`]],
         {origin: 'A1'});
       XLSX.writeFile(wb, `analysis_of_${this.model.initialCryptoCapital}_${this.model.advanced.name}_on_${formatDate(this.model.startDate, 'dd_MMM_YYYY', this.locale)}.xlsx`);
     });
+  }
+
+  optionalDays() {
+    switch (this.model.withdrawalPeriod) {
+      case WithdrawalPeriod.MONTHLY: return ' (31 days)';
+      default: return '';
+    }
+  }
+
+  rebasesProfits() {
+    return this.dataSource.reduce((acc: number, currentValue: BalanceRow) => acc + currentValue.value, 0)
+  }
+
+  desktopColumns(): string[] {
+    const cols = Object.assign([], this.fixedDesktopColumns);
+    cols.push(this.model.profitType == ProfitType.FIXED_AMOUNT ? 'value' : 'profit');
+    return cols;
+  }
+
+  mobileColumns(): string[] {
+    const cols = Object.assign([], this.fixedMobileColumns);
+    cols.push(this.model.profitType == ProfitType.FIXED_AMOUNT ? 'value' : 'profit');
+    return cols;
   }
 
   private count(struct: Row[], selector: (p: Row) => string) {

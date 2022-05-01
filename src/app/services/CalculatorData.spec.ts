@@ -1,4 +1,5 @@
 import {CalculatorData} from './CalculatorData';
+import {ProfitType} from "./ProfitType";
 import {WithdrawalPeriod} from './WithdrawalPeriod';
 
 describe('CalculatorData', () => {
@@ -6,7 +7,9 @@ describe('CalculatorData', () => {
   const secondDate = new Date(2022, 10, 3);
   const testData: CalculatorData = {
     withdrawalPeriod: WithdrawalPeriod.WEEKLY,
+    profitType: ProfitType.FIXED_AMOUNT,
     desiredPeriodicAmountToWithdraw: 100,
+    desiredPeriodicRebasePercentageToWithdraw: 50,
     startDate: firstDate,
     slippageFeesPct: 2,
     initialCryptoCapital: 1000,

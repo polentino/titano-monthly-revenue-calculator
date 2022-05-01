@@ -7,7 +7,7 @@ export class ScaleNumberPipe implements PipeTransform {
   transform(value: number): string {
     const exponent = Math.trunc(Math.log10(Math.abs(value)));
     if (exponent < 3) {
-      return value.toString();
+      return parseFloat(value.toFixed(2)).toString();
     }
 
     const valueScaled = Math.trunc(value) / ScaleNumberPipe.scaleFactor(exponent);

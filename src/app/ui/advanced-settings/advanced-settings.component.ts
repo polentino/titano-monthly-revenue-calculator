@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
-import {TITANO_DATA} from "../../services/CalculatorService";
+import {TITANO_DATA} from "../../services/estimator.service";
 
 @Component({
   selector: 'app-advanced-settings',

@@ -22,8 +22,9 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
-import {CalculatorService} from './services/CalculatorService';
+import {CalculatorService} from './services/calculator.service';
 import {CoinMarketCapService} from './services/CoinMarketCapService';
+import {EstimatorService} from './services/estimator.service';
 import {AboutTaxesDialogComponent} from './ui/about-taxes-dialog/about-taxes-dialog.component';
 import {AdvancedSettingsComponent} from './ui/advanced-settings/advanced-settings.component';
 import {BuyMeABeerComponent} from './ui/buy-me-a-beer/buy-me-a-beer.component';
@@ -65,6 +66,7 @@ import {PipesModule} from './ui/pipes/pipes.module';
     MatNativeDateModule
   ],
   providers: [
+    EstimatorService,
     CalculatorService,
     CoinMarketCapService
   ],

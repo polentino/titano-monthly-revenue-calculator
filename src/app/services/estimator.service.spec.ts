@@ -1,12 +1,15 @@
 import {CalculatorData} from './CalculatorData';
-import {BalanceRow, CalculatorService} from './CalculatorService';
+import {BalanceRow, EstimatorService} from './estimator.service';
+import {ProfitType} from "./ProfitType";
 import {WithdrawalPeriod} from './WithdrawalPeriod';
 
-describe('CalculatorService', () => {
-  const service = new CalculatorService();
+describe('EstimatorService', () => {
+  const service = new EstimatorService();
   const testData: CalculatorData = {
     withdrawalPeriod: WithdrawalPeriod.WEEKLY,
+    profitType: ProfitType.FIXED_AMOUNT,
     desiredPeriodicAmountToWithdraw: 100,
+    desiredPeriodicRebasePercentageToWithdraw: 0,
     startDate: new Date(),
     slippageFeesPct: 2,
     initialCryptoCapital: 1000,
@@ -78,6 +81,7 @@ describe('CalculatorService', () => {
       data.desiredPeriodicAmountToWithdraw = 500;
       const balance = service.oneYearBalance(data);
 
+      expect(balance.length).toBe(13);
       expectBalance(balance[0], data.startDate, 22, 2736.5992, 4431.0397);
       expectBalance(balance[12], data.startDate, 394, 2476000.5535, 4460970.6589);
     });
@@ -88,6 +92,7 @@ describe('CalculatorService', () => {
       data.desiredPeriodicAmountToWithdraw = 500;
       const balance = service.oneYearBalance(data);
 
+      expect(balance.length).toBe(13);
       expectBalance(balance[0], data.startDate, 22, 2736.5992, 4431.0397);
       expectBalance(balance[12], data.startDate,394, 2476000.5535, 4460970.6589);
     });

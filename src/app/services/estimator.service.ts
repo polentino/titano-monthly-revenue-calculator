@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {CalculatorData} from "./CalculatorData";
+import {ProfitType} from "./ProfitType";
 import {WithdrawalPeriod} from './WithdrawalPeriod';
 
 @Injectable({providedIn: 'any'})
-export class CalculatorService {
+export class EstimatorService {
 
   amountBeforeFeesAndTaxes(data: CalculatorData) {
     // if you consider 18% slippage and 30% taxes, to have 100 Titano net:
@@ -19,7 +20,7 @@ export class CalculatorService {
     // the required Titanos at the end of the month, but that's good: it means that even if we withdraw, the wallet will
     // keep grow, not as much as if you never withdraw, but still grows.
     const dailyCompoundPeriods = Math.trunc(24 * 60 / data.advanced.compoundMinutes);
-    const averageHalfHourRevenue = (this.amountBeforeFeesAndTaxes(data) / CalculatorService.periodToDays(data)) / dailyCompoundPeriods;
+    const averageHalfHourRevenue = (this.amountBeforeFeesAndTaxes(data) / WithdrawalPeriod.periodToDays(data.withdrawalPeriod)) / dailyCompoundPeriods;
     const singlePeriodAPY = data.advanced.periodAPY;
 
     // but when will you hit that magic average value? need to solve an equation on Compound at period N and N+1
@@ -27,7 +28,7 @@ export class CalculatorService {
     const d = Math.log(1 + singlePeriodAPY)
     const days = Math.ceil((n / d) / dailyCompoundPeriods)
     // if initial amount is so big to produce negative days, then we don't have to wait to start withdrawing money
-    return (days < 0 ? 0 : days + CalculatorService.periodToDays(data));
+    return (days < 0 ? 0 : days + WithdrawalPeriod.periodToDays(data.withdrawalPeriod));
   }
 
   firstWithdrawalDate(data: CalculatorData) {
@@ -47,13 +48,13 @@ export class CalculatorService {
   }
 
   oneYearBalance(data: CalculatorData): Array<BalanceRow> {
-    const days = CalculatorService.periodToDays(data);
+    const days = WithdrawalPeriod.periodToDays(data.withdrawalPeriod);
     const desiredPeriodicWithdraw = data.desiredPeriodicAmountToWithdraw;
     const cryptoPrice = data.cryptoPrice;
     const apy = data.advanced.periodAPY;
     const initialCapital = data.initialCryptoCapital;
 
-    const iterations = CalculatorService.periodsInYear(data);
+    const iterations = WithdrawalPeriod.periodsInYear(data.withdrawalPeriod);
     const dailyCompoundPeriods = Math.trunc(24 * 60 / data.advanced.compoundMinutes);
     const startDate = this.firstWithdrawalDate(data).minusDays(days);
     startDate.setHours(0, 0, 0, 0);
@@ -74,7 +75,7 @@ export class CalculatorService {
       value: cryptoPrice * firstPeriodFinalAmount
     }];
 
-    for (let i = 0; i <= iterations; i++) {
+    for (let i = 0; i < iterations; i++) {
       const prev = balanceAnalysis[balanceAnalysis.length - 1];
       const finalAmount = gains(prev.finalAmount, days) - (desiredPeriodicWithdraw / cryptoPrice);
       balanceAnalysis.push({
@@ -91,29 +92,7 @@ export class CalculatorService {
   }
 
   estimatedOneYearProfit(data: CalculatorData) {
-    return CalculatorService.periodsInYear(data) * data.desiredPeriodicAmountToWithdraw;
-  }
-
-  private static periodToDays(data: CalculatorData) {
-    switch (data.withdrawalPeriod) {
-      case WithdrawalPeriod.DAILY:
-        return 1;
-      case WithdrawalPeriod.WEEKLY:
-        return 7;
-      case WithdrawalPeriod.MONTHLY:
-        return 31;
-    }
-  }
-
-  private static periodsInYear(data: CalculatorData) {
-    switch (data.withdrawalPeriod) {
-      case WithdrawalPeriod.DAILY:
-        return 365;
-      case WithdrawalPeriod.WEEKLY:
-        return 52;
-      case WithdrawalPeriod.MONTHLY:
-        return 12;
-    }
+    return WithdrawalPeriod.periodsInYear(data.withdrawalPeriod) * data.desiredPeriodicAmountToWithdraw;
   }
 }
 
@@ -130,7 +109,9 @@ export interface BalanceRow {
 
 export const TITANO_DATA: CalculatorData = {
   withdrawalPeriod: WithdrawalPeriod.MONTHLY,
+  profitType: ProfitType.FIXED_AMOUNT,
   desiredPeriodicAmountToWithdraw: 1000,
+  desiredPeriodicRebasePercentageToWithdraw: 50,
   startDate: new Date(),
   slippageFeesPct: 1,
   initialCryptoCapital: 2000,

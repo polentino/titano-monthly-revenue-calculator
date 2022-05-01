@@ -60,7 +60,6 @@ Object.defineProperty(Date.prototype, 'daysBetween', {
     otherCloned.setHours(0, 0, 0, 0);
 
     const diff = self.getTime() - otherCloned.getTime();
-    const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-    return diffDays;
+    return Math.ceil(diff / (1000 * 3600 * 24));
   }
 });
