@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import {AboutTaxesDialogComponent} from './about-taxes-dialog.component';
 import {WithdrawalPeriod} from "../../services/WithdrawalPeriod";
 
@@ -13,7 +13,6 @@ describe('AboutTaxesDialogComponent', () => {
       declarations: [AboutTaxesDialogComponent],
       imports: [MatDialogModule],
       providers: [
-        {provide: MatDialogRef, useValue: {}},
         {
           provide: MAT_DIALOG_DATA, useValue: {
             symbol: "EUR",

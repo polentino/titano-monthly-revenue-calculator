@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {WithdrawalPeriod} from '../../services/WithdrawalPeriod';
 
 @Component({
@@ -9,9 +9,8 @@ import {WithdrawalPeriod} from '../../services/WithdrawalPeriod';
 })
 export class AboutTaxesDialogComponent {
   public doNotShowAgain = false;
-  constructor(
-    public dialogRef: MatDialogRef<AboutTaxesDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AboutTaxesDialogComponentData) {
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: AboutTaxesDialogComponentData) {
   }
 
   uppercasePeriod() {

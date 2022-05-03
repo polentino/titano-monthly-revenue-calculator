@@ -7,7 +7,7 @@ import * as XLSX from 'xlsx';
 import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
 import {CalculatorService} from "../../services/calculator.service";
 import {CalculatorData} from '../../services/CalculatorData';
-import {CoinMarketCapCurrencies} from '../../services/CoinMarketCapCurrencies';
+import {CoinMarketCapCurrencies, Currency} from '../../services/CoinMarketCapCurrencies';
 import {CoinMarketCapService} from '../../services/CoinMarketCapService';
 import {BalanceRow, EstimatorService, TITANO_DATA} from '../../services/estimator.service';
 import {ProfitType} from "../../services/ProfitType";
@@ -17,6 +17,11 @@ import {AdvancedSettingsComponent} from '../advanced-settings/advanced-settings.
 import {BuyMeABeerComponent} from '../buy-me-a-beer/buy-me-a-beer.component';
 import {DownloadBreakdownComponent} from '../download-breakdown/download-breakdown.component';
 import '../../utils/utils'
+import {
+  PropertyEditorComponent,
+  PropertyEditorData,
+  PropertyEditorType
+} from "../property-editor-component/property-editor.component";
 
 
 @Component({
@@ -109,6 +114,99 @@ export class MainCardComponent implements DoCheck {
 
   periodicTitanoWithdrawal() {
     return this.amountBeforeFeesAndTaxes();
+  }
+
+  editProfitType() {
+    const ref = this.dialog.open(PropertyEditorComponent, {
+      disableClose: true,
+      data: {
+        title: 'Edit Profit type',
+        editorType: PropertyEditorType.OTHER,
+        currentValue: this.model.profitType,
+        values: ProfitType.values,
+        renderer: (o: ProfitType) => ProfitType.toDescription(o)
+      }
+    });
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<ProfitType>) => {
+      if (data == undefined) return;
+      this.model.profitType = data.currentValue
+    });
+  }
+
+  editPeriodicAmountToWithdraw() {
+    const ref = this.dialog.open(PropertyEditorComponent, {
+      disableClose: true,
+      data: {
+        title: 'Edit Amount To Withdraw',
+        editorType: PropertyEditorType.NUMBER,
+        currentValue: this.model.desiredPeriodicAmountToWithdraw,
+        values: [],
+        renderer: (o: number) => o
+      }
+    });
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
+      if (data == undefined) return;
+      this.model.desiredPeriodicAmountToWithdraw = data.currentValue;
+    });
+  }
+
+  editRebasesPercentageToWithdraw() {
+    const ref = this.dialog.open(PropertyEditorComponent, {
+      disableClose: true,
+      data: {
+        title: 'Edit Rebase Percentages To Withdraw',
+        editorType: PropertyEditorType.NUMBER,
+        currentValue: this.model.desiredPeriodicRebasePercentageToWithdraw,
+        values: [],
+        renderer: (o: number) => o
+      }
+    });
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
+      if (data == undefined) return;
+      this.model.desiredPeriodicRebasePercentageToWithdraw = data.currentValue;
+    });
+  }
+
+  editCurrency() {
+    const ref = this.dialog.open(PropertyEditorComponent, {
+      disableClose: true,
+      data: {
+        title: 'Edit Currency',
+        editorType: PropertyEditorType.OTHER,
+        currentValue: this.currency,
+        values: this.currencies,
+        renderer: (o: Currency) => o.symbol
+      }
+    });
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<Currency>) => {
+      if (data == undefined) return;
+      if (this.currency != data.currentValue) {
+        this.currency = data.currentValue;
+        this.fetchQuote();
+      }
+    });
+  }
+
+  editWithdrawalPeriod() {
+    const ref = this.dialog.open(PropertyEditorComponent, {
+      disableClose: true,
+      data: {
+        title: 'Edit Withdrawal Period',
+        editorType: PropertyEditorType.OTHER,
+        currentValue: this.model.withdrawalPeriod,
+        values: WithdrawalPeriod.values,
+        renderer: (o: WithdrawalPeriod) => WithdrawalPeriod.toStringNoun(o, true)
+      }
+    });
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<WithdrawalPeriod>) => {
+      if (data == undefined) return;
+      this.model.withdrawalPeriod = data.currentValue;
+    });
   }
 
   amountBeforeFeesAndTaxes() {
@@ -206,8 +304,10 @@ export class MainCardComponent implements DoCheck {
 
   optionalDays() {
     switch (this.model.withdrawalPeriod) {
-      case WithdrawalPeriod.MONTHLY: return ' (31 days)';
-      default: return '';
+      case WithdrawalPeriod.MONTHLY:
+        return ' (31 days)';
+      default:
+        return '';
     }
   }
 

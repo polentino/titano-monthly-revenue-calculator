@@ -31,6 +31,8 @@ import {BuyMeABeerComponent} from './ui/buy-me-a-beer/buy-me-a-beer.component';
 import {DownloadBreakdownComponent} from './ui/download-breakdown/download-breakdown.component';
 import {MainCardComponent} from './ui/main-card/main-card.component';
 import {PipesModule} from './ui/pipes/pipes.module';
+import {PropertyEditorComponent} from './ui/property-editor-component/property-editor.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 @NgModule({
   declarations: [
@@ -39,7 +41,8 @@ import {PipesModule} from './ui/pipes/pipes.module';
     BuyMeABeerComponent,
     AboutTaxesDialogComponent,
     AdvancedSettingsComponent,
-    DownloadBreakdownComponent
+    DownloadBreakdownComponent,
+    PropertyEditorComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +66,8 @@ import {PipesModule} from './ui/pipes/pipes.module';
     PipesModule,
     MatTooltipModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatRadioModule
   ],
   providers: [
     EstimatorService,

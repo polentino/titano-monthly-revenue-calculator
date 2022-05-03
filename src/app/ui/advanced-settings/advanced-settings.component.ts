@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
 import {TITANO_DATA} from "../../services/estimator.service";
 
@@ -12,9 +12,7 @@ export class AdvancedSettingsComponent {
   model: AdvancedCalculatorData;
   private titanoAdvancedData = JSON.stringify(TITANO_DATA.advanced);
 
-  constructor(
-    public dialogRef: MatDialogRef<AdvancedSettingsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AdvancedCalculatorData) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: AdvancedCalculatorData) {
     this.model = data;
   }
 

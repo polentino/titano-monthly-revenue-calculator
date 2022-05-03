@@ -3,37 +3,22 @@
   <mat-card-subtitle>Helps you estimate sustainable profit taking</mat-card-subtitle>
   <mat-card-content>
     <div>
-      <label>I would like to take a
-        <mat-select class="profit-type" [(ngModel)]="model.profitType">
-          <mat-option *ngFor="let pt of profitTypes"
-                      [value]="pt">{{ProfitType.toDescription(pt)}}</mat-option>
-        </mat-select>
-        of
-        <input *ngIf="model.profitType == ProfitType.FIXED_AMOUNT"
-               [(ngModel)]="model.desiredPeriodicAmountToWithdraw"
-               type="number" min="0"/>
-
-        <ng-container *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE">
-          <input matInput [(ngModel)]="model.desiredPeriodicRebasePercentageToWithdraw" type="number" min="0"
-                 max="100"/>
-          (%)
-        </ng-container>
-
-      </label>
-      <mat-select *ngIf="model.profitType == ProfitType.FIXED_AMOUNT" [(value)]="currency"
-                  (selectionChange)="fetchQuote()">
-        <mat-option *ngFor="let c of currencies" [value]="c">{{c.symbol}}</mat-option>
-      </mat-select>
+      I would like to take a
+      <a (click)="editProfitType()" class="property-link">{{ProfitType.toDescription(model.profitType)}}</a>
+      of
+      <a *ngIf="model.profitType == ProfitType.FIXED_AMOUNT" (click)="editPeriodicAmountToWithdraw()"
+         class="property-link">{{model.desiredPeriodicAmountToWithdraw}}</a>
+      <a *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE" (click)="editRebasesPercentageToWithdraw()"
+         class="property-link">{{model.desiredPeriodicRebasePercentageToWithdraw}}%</a>
+      <a *ngIf="model.profitType == ProfitType.FIXED_AMOUNT" (click)="editCurrency()"
+         class="property-link">{{currency.symbol}}</a>
       every
-      <mat-select [(ngModel)]="model.withdrawalPeriod">
-        <mat-option *ngFor="let wp of withdrawalPeriods"
-                    [value]="wp">{{WithdrawalPeriod.toStringNoun(wp, true)}}</mat-option>
-      </mat-select>
+      <a (click)="editWithdrawalPeriod()"
+         class="property-link">{{WithdrawalPeriod.toStringNoun(model.withdrawalPeriod, true)}}</a>
+
       <ng-container *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE">
         , and my currency is
-        <mat-select [(value)]="currency" (selectionChange)="fetchQuote()">
-          <mat-option *ngFor="let c of currencies" [value]="c">{{c.symbol}}</mat-option>
-        </mat-select>
+        <a (click)="editCurrency()" class="property-link">{{currency.symbol}}</a>
       </ng-container>
       .
     </div>
