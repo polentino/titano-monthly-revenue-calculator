@@ -241,7 +241,7 @@ export class MainCardComponent implements DoCheck {
       disableClose: true,
       data: {
         editorType: PropertyEditorType.NUMBER,
-        title: `${this.model.advanced.name.toUpperCase()}/${this.currency.symbol} price`,
+        title: `${this.currency.symbol}/${this.model.advanced.name.toUpperCase()} price`,
         label: `Exchange rate`,
         currentValue: this.model.cryptoPrice,
         values: [],
@@ -274,6 +274,29 @@ export class MainCardComponent implements DoCheck {
     ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
       if (data == undefined) return;
       this.model.slippageFeesPct = data.currentValue;
+    });
+  }
+
+  editCountryTaxes() {
+    if (!this.model.countryTaxesCalculationEnabled) return;
+
+    const ref = this.dialog.open(PropertyEditorComponent, {
+      disableClose: true,
+      data: {
+        editorType: PropertyEditorType.NUMBER,
+        title: "Edit your Country's taxes (%)",
+        label: 'country taxes percentage',
+        placholder: '25 (%)',
+        currentValue: this.model.countryTaxes,
+        values: [],
+        renderer: (o: number) => o,
+        validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
+      }
+    });
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
+      if (data == undefined) return;
+      this.model.countryTaxes = data.currentValue;
     });
   }
 
