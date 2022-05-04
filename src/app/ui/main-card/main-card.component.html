@@ -32,8 +32,7 @@
              [min]="november2021">
     </a>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-      , with unit price of
+      <mat-datepicker #picker></mat-datepicker>, with unit price of
       <a (click)="editCryptoPrice()"
          class="property-link">{{model.cryptoPrice | numberFormat : 5}}
         {{currency.symbol}}/{{model.advanced.name.toUpperCase()}}</a>
@@ -44,8 +43,8 @@
       Also include my Country's taxes
     </mat-checkbox>
     <label [class]="model.countryTaxesCalculationEnabled ? 'enabled' : 'disabled'">, which amounts to
-      <a (click)="editCountryTaxes()" class="property-link">{{model.countryTaxes}}%
-        {{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod)}}</a> of the gross income.
+      <a (click)="editCountryTaxes()" class="property-link">{{model.countryTaxes}}%</a>
+      {{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod)}} of the gross income.
     </label>
 
     <p></p>
