@@ -2,7 +2,7 @@
   <mat-form-field appearance="fill">
     <mat-label>Date Format:</mat-label>
     <mat-select [(value)]="this.format">
-      <mat-option *ngFor="let f of formats" [value]="f">{{f}}</mat-option>
+      <mat-option *ngFor="let f of formats" [value]="f">{{formatDate(f, separator)}}</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="fill">
@@ -11,10 +11,6 @@
       <mat-option *ngFor="let s of separators" [value]="s">{{s}}</mat-option>
     </mat-select>
   </mat-form-field>
-  <div>
-    Example:
-    <blockquote>{{formatDate(format, separator)}}</blockquote>
-  </div>
 </div>
 <mat-dialog-actions>
   <button mat-raised-button class="half-width" color="primary" [mat-dialog-close]="undefined">CANCEL</button>
