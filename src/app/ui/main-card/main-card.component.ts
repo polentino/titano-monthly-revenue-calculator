@@ -225,13 +225,55 @@ export class MainCardComponent implements DoCheck {
         label: `${this.model.advanced.name.toUpperCase()} in my wallet`,
         currentValue: this.model.initialCryptoCapital,
         values: [],
-        renderer: (o: number) => o
+        renderer: (o: number) => o,
+        validator: (o: number) => o !== undefined && o > 0
       }
     });
 
     ref.afterClosed().subscribe((data: PropertyEditorData<WithdrawalPeriod>) => {
       if (data == undefined) return;
       this.model.initialCryptoCapital = data.currentValue;
+    });
+  }
+
+  editCryptoPrice() {
+    const ref = this.dialog.open(PropertyEditorComponent, {
+      disableClose: true,
+      data: {
+        editorType: PropertyEditorType.NUMBER,
+        title: `${this.model.advanced.name.toUpperCase()}/${this.currency.symbol} price`,
+        label: `Exchange rate`,
+        currentValue: this.model.cryptoPrice,
+        values: [],
+        renderer: (o: number) => o,
+        validator: (o: number) => o !== undefined && o > 0
+      }
+    });
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
+      if (data == undefined) return;
+      this.model.cryptoPrice = data.currentValue;
+    });
+  }
+
+  editSlippageFees() {
+    const ref = this.dialog.open(PropertyEditorComponent, {
+      disableClose: true,
+      data: {
+        editorType: PropertyEditorType.NUMBER,
+        title: 'Edit slippage fees (%)',
+        label: 'slippage fees',
+        placholder: '2 (%)',
+        currentValue: this.model.slippageFeesPct,
+        values: [],
+        renderer: (o: number) => o,
+        validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
+      }
+    });
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
+      if (data == undefined) return;
+      this.model.slippageFeesPct = data.currentValue;
     });
   }
 
