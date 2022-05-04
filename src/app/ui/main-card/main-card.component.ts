@@ -122,7 +122,7 @@ export class MainCardComponent implements DoCheck {
       data: {
         editorType: PropertyEditorType.OTHER,
         title: 'Choose profit-taking type',
-        label: 'You would like to withdraw a',
+        label: 'Would like to withdraw a',
         currentValue: this.model.profitType,
         values: ProfitType.values,
         renderer: (o: ProfitType) => ProfitType.toDescription(o, this.model.withdrawalPeriod)
@@ -203,7 +203,7 @@ export class MainCardComponent implements DoCheck {
       data: {
         editorType: PropertyEditorType.OTHER,
         title: 'Select Withdrawal Period',
-        label: 'You would like to withdraw every:',
+        label: 'Would like to withdraw every:',
         currentValue: this.model.withdrawalPeriod,
         values: WithdrawalPeriod.values,
         renderer: (o: WithdrawalPeriod) => WithdrawalPeriod.toStringNoun(o, true)
@@ -213,6 +213,25 @@ export class MainCardComponent implements DoCheck {
     ref.afterClosed().subscribe((data: PropertyEditorData<WithdrawalPeriod>) => {
       if (data == undefined) return;
       this.model.withdrawalPeriod = data.currentValue;
+    });
+  }
+
+  editInitialWallet() {
+    const ref = this.dialog.open(PropertyEditorComponent, {
+      disableClose: true,
+      data: {
+        editorType: PropertyEditorType.NUMBER,
+        title: `Initial capital (${this.model.advanced.name.toUpperCase()})`,
+        label: `${this.model.advanced.name.toUpperCase()} in my wallet`,
+        currentValue: this.model.initialCryptoCapital,
+        values: [],
+        renderer: (o: number) => o
+      }
+    });
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<WithdrawalPeriod>) => {
+      if (data == undefined) return;
+      this.model.initialCryptoCapital = data.currentValue;
     });
   }
 

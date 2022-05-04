@@ -23,16 +23,17 @@
       .
     </div>
     <div>
-      <label>
-        My wallet contains <input [(ngModel)]="model.initialCryptoCapital" type="number" min="0"/>
-      </label>
+      My wallet contains
+      <a (click)="editInitialWallet()"
+         class="property-link">{{model.initialCryptoCapital}}</a>
       {{model.advanced.name.toUpperCase()}}
-      <label>
-        on date
-        <input matInput [matDatepicker]="picker" [(ngModel)]="model.startDate" [min]="november2021">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </label>
+      as of
+      <a (click)="picker.open()"
+         class="property-link">{{model.startDate | date: dateFormat}}
+      <input matInput class="invisible-input" [matDatepicker]="picker" [(ngModel)]="model.startDate" [min]="november2021">
+      </a>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
 
       <label>, with unit price of <input [(ngModel)]="model.cryptoPrice" type="number" min="0" step="0.0001"/>
         {{this.currency.symbol}}/{{model.advanced.name.toUpperCase()}},
