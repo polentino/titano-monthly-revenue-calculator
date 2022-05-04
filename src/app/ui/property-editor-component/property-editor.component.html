@@ -1,26 +1,25 @@
-<h2 mat-dialog-title>{{data.title}}</h2>
+<h3 mat-dialog-title>{{data.title}}</h3>
 <mat-dialog-content>
   <!-- single-element property -->
   <ng-container *ngIf="data.values.length == 0">
     <ng-container *ngIf="data.editorType == PropertyEditorType.STRING">
       <mat-form-field appearance="fill">
-        <mat-label>Insert new value</mat-label>
-        <!-- todo: add validators, min/max, placeholder -->
-        <input matInput placeholder="Ex. Pizza" [(ngModel)]="data.currentValue">
+        <mat-label>{{data.label}}</mat-label>
+        <input matInput type="text" [(ngModel)]="data.currentValue" [placeholder]="data.placeholder">
       </mat-form-field>
     </ng-container>
 
     <ng-container *ngIf="data.editorType == PropertyEditorType.NUMBER">
       <mat-form-field appearance="fill">
-        <mat-label>Insert new value</mat-label>
-        <!-- todo: add validators, min/max, placeholder -->
-        <input matInput placeholder="Ex. Pizza" [(ngModel)]="data.currentValue">
+        <mat-label>{{data.label}}</mat-label>
+        <input matInput type="number" [(ngModel)]="data.currentValue" [placeholder]="data.placeholder">
       </mat-form-field>
     </ng-container>
   </ng-container>
 
-  <!-- property that can have at most 3 values-->
-  <ng-container *ngIf="data.values.length <= 3">
+  <!-- property that can have at most 2 or 3 values-->
+  <ng-container *ngIf="data.values.length == 2 || data.values.length == 3">
+    <label>{{data.label}}</label>
     <mat-radio-group [(ngModel)]="data.currentValue" class="radio-group">
       <mat-radio-button *ngFor="let v of data.values" [value]="v"
                         class="radio-button">{{data.renderer(v)}}</mat-radio-button>
@@ -29,13 +28,20 @@
 
   <!-- property that needs a selector -->
   <ng-container *ngIf="data.values.length > 3">
-    <mat-select class="profit-type" [(ngModel)]="data.currentValue">
-      <mat-option *ngFor="let pt of data.values"
-                  [value]="pt">{{data.renderer(pt)}}</mat-option>
-    </mat-select>
+    <mat-form-field>
+      <label>{{data.label}}</label>
+      <mat-select class="profit-type" [(ngModel)]="data.currentValue">
+        <mat-option *ngFor="let pt of data.values"
+                    [value]="pt">{{data.renderer(pt)}}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </ng-container>
 </mat-dialog-content>
+<!-- todo check consistency of layout, i.e. APPLY stays on the left or right? -->
 <mat-dialog-actions>
-  <button mat-raised-button class="full-width" color="warn" [mat-dialog-close]="data">APPLY</button>
+  <button mat-raised-button class="full-width" color="warn"
+          [mat-dialog-close]="data"
+          [disabled]="data.validator !== undefined && !data.validator?.(this.data.currentValue)">APPLY
+  </button>
   <button mat-raised-button class="full-width" color="primary" [mat-dialog-close]="undefined">CANCEL</button>
 </mat-dialog-actions>

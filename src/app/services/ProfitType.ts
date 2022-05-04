@@ -1,3 +1,5 @@
+import {WithdrawalPeriod} from './WithdrawalPeriod';
+
 export enum ProfitType {
   FIXED_AMOUNT,
   REBASE_PERCENTAGE
@@ -5,12 +7,16 @@ export enum ProfitType {
 
 export namespace ProfitType {
 
-  export function toDescription(type: ProfitType) {
+  export function toDescription(type: ProfitType, wp?: WithdrawalPeriod) {
     switch (type) {
       case ProfitType.FIXED_AMOUNT:
-        return "fixed amount profit";
+        return 'periodic, fixed amount';
       case ProfitType.REBASE_PERCENTAGE:
-        return "percentage of the rebases profit";
+        if (wp) {
+          return `% of the ${WithdrawalPeriod.toStringAdjective(wp)} rebases profit`;
+        } else {
+          return '% of the rebases profit';
+        }
     }
   }
 

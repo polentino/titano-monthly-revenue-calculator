@@ -120,11 +120,12 @@ export class MainCardComponent implements DoCheck {
     const ref = this.dialog.open(PropertyEditorComponent, {
       disableClose: true,
       data: {
-        title: 'Edit Profit type',
         editorType: PropertyEditorType.OTHER,
+        title: 'Choose profit-taking type',
+        label: 'You would like to withdraw a',
         currentValue: this.model.profitType,
         values: ProfitType.values,
-        renderer: (o: ProfitType) => ProfitType.toDescription(o)
+        renderer: (o: ProfitType) => ProfitType.toDescription(o, this.model.withdrawalPeriod)
       }
     });
 
@@ -138,11 +139,13 @@ export class MainCardComponent implements DoCheck {
     const ref = this.dialog.open(PropertyEditorComponent, {
       disableClose: true,
       data: {
-        title: 'Edit Amount To Withdraw',
         editorType: PropertyEditorType.NUMBER,
+        title: `Withdraw amount (${this.currency.symbol})`,
+        label: `${WithdrawalPeriod.toStringAdjective(this.model.withdrawalPeriod, true)} withdraw (${this.currency.symbol}):`,
         currentValue: this.model.desiredPeriodicAmountToWithdraw,
         values: [],
-        renderer: (o: number) => o
+        renderer: (o: number) => o,
+        validator: (o: number) => o !== undefined && o > 0
       }
     });
 
@@ -156,11 +159,14 @@ export class MainCardComponent implements DoCheck {
     const ref = this.dialog.open(PropertyEditorComponent, {
       disableClose: true,
       data: {
-        title: 'Edit Rebase Percentages To Withdraw',
         editorType: PropertyEditorType.NUMBER,
+        title: 'Rebase % to withdraw',
+        label: 'values between 1 and 100 only',
+        placeholder: 'i.e. 50 (%)',
         currentValue: this.model.desiredPeriodicRebasePercentageToWithdraw,
         values: [],
-        renderer: (o: number) => o
+        renderer: (o: number) => o,
+        validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
       }
     });
 
@@ -174,7 +180,7 @@ export class MainCardComponent implements DoCheck {
     const ref = this.dialog.open(PropertyEditorComponent, {
       disableClose: true,
       data: {
-        title: 'Edit Currency',
+        title: 'Select desired currency',
         editorType: PropertyEditorType.OTHER,
         currentValue: this.currency,
         values: this.currencies,
@@ -195,8 +201,9 @@ export class MainCardComponent implements DoCheck {
     const ref = this.dialog.open(PropertyEditorComponent, {
       disableClose: true,
       data: {
-        title: 'Edit Withdrawal Period',
         editorType: PropertyEditorType.OTHER,
+        title: 'Select Withdrawal Period',
+        label: 'You would like to withdraw every:',
         currentValue: this.model.withdrawalPeriod,
         values: WithdrawalPeriod.values,
         renderer: (o: WithdrawalPeriod) => WithdrawalPeriod.toStringNoun(o, true)

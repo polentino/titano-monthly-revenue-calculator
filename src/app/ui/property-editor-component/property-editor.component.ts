@@ -14,11 +14,14 @@ export class PropertyEditorComponent {
 }
 
 export interface PropertyEditorData<T> {
-  title: string,
-  editorType: PropertyEditorType,
-  currentValue: T,
-  values: Array<T>,
+  editorType: PropertyEditorType
+  title: string
+  label: string
+  placeholder: string
+  currentValue: T
+  values: Array<T>
   renderer: (obj: T) => string
+  validator?: (obj: T) => boolean
 }
 
 export enum PropertyEditorType {
