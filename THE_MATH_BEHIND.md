@@ -173,6 +173,6 @@ and the new compounding period will be `n=4812`, or about 101 days. Thus, the pr
 I'm sorry but, with almost 200 countries in the world, there's no way I can create the perfect calculator that fits for
 everybody's tax system. That's really beyond my reach.
 
-With this cleared out: my calculator uses the `Country's taxes` field to compute taxes every time you withdraw, that is,
-either monthly or weekly. It's up to you to get to know your taxation system and insert a sensible value for it. Or just
-set it to `0`, and then your tax accountant will tell you how much of it will have to be paid.
+With this cleared out: my calculator uses the `Country's taxes` field to compute taxes **every time you withdraw, that
+is, daily/monthly/weekly**. It's up to you to get to know your taxation system and insert a sensible value for it. Or
+just set it to `0`, and then your tax accountant will tell you how much of it will have to be paid.
