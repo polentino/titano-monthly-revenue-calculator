@@ -31,17 +31,15 @@
     <mat-form-field>
       <label>{{data.label}}</label>
       <mat-select class="profit-type" [(ngModel)]="data.currentValue">
-        <mat-option *ngFor="let pt of data.values"
-                    [value]="pt">{{data.renderer(pt)}}</mat-option>
+        <mat-option *ngFor="let pt of data.values" [value]="pt">{{data.renderer(pt)}}</mat-option>
       </mat-select>
     </mat-form-field>
   </ng-container>
 </mat-dialog-content>
-<!-- todo check consistency of layout, i.e. APPLY stays on the left or right? -->
 <mat-dialog-actions>
-  <button mat-raised-button class="full-width" color="warn"
+  <button mat-raised-button class="full-width" [mat-dialog-close]="undefined">CANCEL</button>
+  <button mat-raised-button class="full-width" color="primary"
           [mat-dialog-close]="data"
           [disabled]="data.validator !== undefined && !data.validator?.(this.data.currentValue)">APPLY
   </button>
-  <button mat-raised-button class="full-width" color="primary" [mat-dialog-close]="undefined">CANCEL</button>
 </mat-dialog-actions>
