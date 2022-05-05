@@ -117,186 +117,132 @@ export class MainCardComponent implements DoCheck {
   }
 
   editProfitType() {
-    const ref = this.dialog.open(PropertyEditorComponent, {
-      disableClose: true,
-      data: {
-        editorType: PropertyEditorType.OTHER,
-        title: 'Choose profit-taking type',
-        label: 'Would like to withdraw a',
-        currentValue: this.model.profitType,
-        values: ProfitType.values,
-        renderer: (o: ProfitType) => ProfitType.toDescription(o, this.model.withdrawalPeriod)
-      }
-    });
-
-    ref.afterClosed().subscribe((data: PropertyEditorData<ProfitType>) => {
-      if (data == undefined) return;
-      this.model.profitType = data.currentValue
-    });
+    this.editProperty({
+      editorType: PropertyEditorType.OTHER,
+      title: 'Choose profit-taking type',
+      label: 'Would like to withdraw a',
+      placeholder: '',
+      currentValue: this.model.profitType,
+      values: ProfitType.values,
+      renderer: (o: ProfitType) => ProfitType.toDescription(o, this.model.withdrawalPeriod)
+    }, value => this.model.profitType = value);
   }
 
   editPeriodicAmountToWithdraw() {
-    const ref = this.dialog.open(PropertyEditorComponent, {
-      disableClose: true,
-      data: {
-        editorType: PropertyEditorType.NUMBER,
-        title: `Withdraw amount (${this.currency.symbol})`,
-        label: `${WithdrawalPeriod.toStringAdjective(this.model.withdrawalPeriod, true)} withdraw (${this.currency.symbol}):`,
-        currentValue: this.model.desiredPeriodicAmountToWithdraw,
-        values: [],
-        renderer: (o: number) => o,
-        validator: (o: number) => o !== undefined && o > 0
-      }
-    });
-
-    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
-      if (data == undefined) return;
-      this.model.desiredPeriodicAmountToWithdraw = data.currentValue;
-    });
+    this.editProperty({
+      editorType: PropertyEditorType.NUMBER,
+      title: `Withdraw amount (${this.currency.symbol})`,
+      label: `${WithdrawalPeriod.toStringAdjective(this.model.withdrawalPeriod, true)} withdraw (${this.currency.symbol}):`,
+      placeholder: 'amount',
+      currentValue: this.model.desiredPeriodicAmountToWithdraw,
+      values: [],
+      renderer: (o: number) => `${o}`,
+      validator: (o: number) => o !== undefined && o > 0
+    }, value => this.model.desiredPeriodicAmountToWithdraw = value);
   }
 
   editRebasesPercentageToWithdraw() {
-    const ref = this.dialog.open(PropertyEditorComponent, {
-      disableClose: true,
-      data: {
-        editorType: PropertyEditorType.NUMBER,
-        title: 'Rebase % to withdraw',
-        label: 'values between 1 and 100 only',
-        placeholder: 'i.e. 50 (%)',
-        currentValue: this.model.desiredPeriodicRebasePercentageToWithdraw,
-        values: [],
-        renderer: (o: number) => o,
-        validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
-      }
-    });
-
-    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
-      if (data == undefined) return;
-      this.model.desiredPeriodicRebasePercentageToWithdraw = data.currentValue;
-    });
+    this.editProperty({
+      editorType: PropertyEditorType.NUMBER,
+      title: 'Rebase % to withdraw',
+      label: 'values between 1 and 100 only',
+      placeholder: 'i.e. 50(%)',
+      currentValue: this.model.desiredPeriodicRebasePercentageToWithdraw,
+      values: [],
+      renderer: (o: number) => `${o}`,
+      validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
+    }, value => this.model.desiredPeriodicRebasePercentageToWithdraw = value);
   }
 
   editCurrency() {
-    const ref = this.dialog.open(PropertyEditorComponent, {
-      disableClose: true,
-      data: {
-        title: 'Select desired currency',
-        editorType: PropertyEditorType.OTHER,
-        currentValue: this.currency,
-        values: this.currencies,
-        renderer: (o: Currency) => o.symbol
-      }
-    });
-
-    ref.afterClosed().subscribe((data: PropertyEditorData<Currency>) => {
-      if (data == undefined) return;
-      if (this.currency != data.currentValue) {
-        this.currency = data.currentValue;
+    this.editProperty({
+      title: 'Select desired currency',
+      label: 'Country Currency:',
+      editorType: PropertyEditorType.OTHER,
+      currentValue: this.currency,
+      placeholder: 'country currency, i.e. EUR',
+      values: this.currencies,
+      renderer: (o: Currency) => o.symbol
+    }, value => {
+      if (this.currency != value) {
+        this.currency = value;
         this.fetchQuote();
       }
     });
   }
 
   editWithdrawalPeriod() {
-    const ref = this.dialog.open(PropertyEditorComponent, {
-      disableClose: true,
-      data: {
-        editorType: PropertyEditorType.OTHER,
-        title: 'Select Withdrawal Period',
-        label: 'Would like to withdraw every:',
-        currentValue: this.model.withdrawalPeriod,
-        values: WithdrawalPeriod.values,
-        renderer: (o: WithdrawalPeriod) => WithdrawalPeriod.toStringNoun(o, true)
-      }
-    });
-
-    ref.afterClosed().subscribe((data: PropertyEditorData<WithdrawalPeriod>) => {
-      if (data == undefined) return;
-      this.model.withdrawalPeriod = data.currentValue;
-    });
+    this.editProperty({
+      editorType: PropertyEditorType.OTHER,
+      title: 'Select Withdrawal Period',
+      label: 'Would like to withdraw every:',
+      currentValue: this.model.withdrawalPeriod,
+      placeholder: 'withdrawal period',
+      values: WithdrawalPeriod.values,
+      renderer: (o: WithdrawalPeriod) => WithdrawalPeriod.toStringNoun(o, true)
+    }, value => this.model.withdrawalPeriod = value);
   }
 
   editInitialWallet() {
-    const ref = this.dialog.open(PropertyEditorComponent, {
-      disableClose: true,
-      data: {
-        editorType: PropertyEditorType.NUMBER,
-        title: `Initial capital (${this.model.advanced.name.toUpperCase()})`,
-        label: `${this.model.advanced.name.toUpperCase()} in my wallet`,
-        currentValue: this.model.initialCryptoCapital,
-        values: [],
-        renderer: (o: number) => o,
-        validator: (o: number) => o !== undefined && o > 0
-      }
-    });
-
-    ref.afterClosed().subscribe((data: PropertyEditorData<WithdrawalPeriod>) => {
-      if (data == undefined) return;
-      this.model.initialCryptoCapital = data.currentValue;
-    });
+    this.editProperty({
+      editorType: PropertyEditorType.NUMBER,
+      title: `Initial capital (${this.model.advanced.name.toUpperCase()})`,
+      label: `${this.model.advanced.name.toUpperCase()} in my wallet`,
+      currentValue: this.model.initialCryptoCapital,
+      placeholder: 'i.e. 100000',
+      values: [],
+      renderer: (o: number) => `${o}`,
+      validator: (o: number) => o !== undefined && o > 0
+    }, value => this.model.initialCryptoCapital = value);
   }
 
   editCryptoPrice() {
-    const ref = this.dialog.open(PropertyEditorComponent, {
-      disableClose: true,
-      data: {
-        editorType: PropertyEditorType.NUMBER,
-        title: `${this.currency.symbol}/${this.model.advanced.name.toUpperCase()} price`,
-        label: `Exchange rate`,
-        currentValue: this.model.cryptoPrice,
-        values: [],
-        renderer: (o: number) => o,
-        validator: (o: number) => o !== undefined && o > 0
-      }
-    });
-
-    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
-      if (data == undefined) return;
-      this.model.cryptoPrice = data.currentValue;
-    });
+    this.editProperty({
+      editorType: PropertyEditorType.NUMBER,
+      title: `${this.currency.symbol}/${this.model.advanced.name.toUpperCase()} price`,
+      label: `Exchange rate`,
+      currentValue: this.model.cryptoPrice,
+      placeholder: `${this.currency.symbol}/${this.model.advanced.name.toUpperCase()} rate`,
+      values: [],
+      renderer: (o: number) => `${o}`,
+      validator: (o: number) => o !== undefined && o > 0
+    }, value => this.model.cryptoPrice = value);
   }
 
   editSlippageFees() {
-    const ref = this.dialog.open(PropertyEditorComponent, {
-      disableClose: true,
-      data: {
-        editorType: PropertyEditorType.NUMBER,
-        title: 'Edit slippage fees (%)',
-        label: 'slippage fees',
-        placeholder: '2 (%)',
-        currentValue: this.model.slippageFeesPct,
-        values: [],
-        renderer: (o: number) => o,
-        validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
-      }
-    });
-
-    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
-      if (data == undefined) return;
-      this.model.slippageFeesPct = data.currentValue;
-    });
+    this.editProperty({
+      editorType: PropertyEditorType.NUMBER,
+      title: 'Edit slippage fees (%)',
+      label: 'slippage fees',
+      placeholder: 'i.e. 2(%)',
+      currentValue: this.model.slippageFeesPct,
+      values: [],
+      renderer: (o: number) => `${o}`,
+      validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
+    }, value => this.model.slippageFeesPct = value);
   }
 
   editCountryTaxes() {
     if (!this.model.countryTaxesCalculationEnabled) return;
 
-    const ref = this.dialog.open(PropertyEditorComponent, {
-      disableClose: true,
-      data: {
-        editorType: PropertyEditorType.NUMBER,
-        title: "Edit your Country's taxes (%)",
-        label: 'country taxes percentage',
-        placeholder: '25 (%)',
-        currentValue: this.model.countryTaxes,
-        values: [],
-        renderer: (o: number) => o,
-        validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
-      }
-    });
+    this.editProperty({
+      editorType: PropertyEditorType.NUMBER,
+      title: "Edit your Country's taxes (%)",
+      label: 'country taxes percentage',
+      placeholder: 'i.e. 25(%)',
+      currentValue: this.model.countryTaxes,
+      values: [],
+      renderer: (o: number) => `${o}`,
+      validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
+    }, value => this.model.countryTaxes = value);
+  }
 
-    ref.afterClosed().subscribe((data: PropertyEditorData<number>) => {
+  private editProperty<T>(data: PropertyEditorData<T>, onSuccess: (value: T) => void) {
+    const ref = this.dialog.open(PropertyEditorComponent, {disableClose: true, data: data});
+
+    ref.afterClosed().subscribe((data: PropertyEditorData<T>) => {
       if (data == undefined) return;
-      this.model.countryTaxes = data.currentValue;
+      onSuccess(data.currentValue);
     });
   }
 
