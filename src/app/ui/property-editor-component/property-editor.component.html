@@ -30,7 +30,7 @@
   <ng-container *ngIf="data.values.length > 3">
     <mat-form-field>
       <label>{{data.label}}</label>
-      <mat-select class="profit-type" [(ngModel)]="data.currentValue">
+      <mat-select class="profit-type" [(value)]="data.currentValue">
         <mat-option *ngFor="let pt of data.values" [value]="pt">{{data.renderer(pt)}}</mat-option>
       </mat-select>
     </mat-form-field>

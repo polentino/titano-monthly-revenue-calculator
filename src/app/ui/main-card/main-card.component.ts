@@ -5,12 +5,12 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import * as XLSX from 'xlsx';
 import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
-import {CalculatorService} from "../../services/calculator.service";
+import {CalculatorService} from '../../services/calculator.service';
 import {CalculatorData} from '../../services/CalculatorData';
 import {CoinMarketCapCurrencies, Currency} from '../../services/CoinMarketCapCurrencies';
 import {CoinMarketCapService} from '../../services/CoinMarketCapService';
 import {BalanceRow, EstimatorService, TITANO_DATA} from '../../services/estimator.service';
-import {ProfitType} from "../../services/ProfitType";
+import {ProfitType} from '../../services/ProfitType';
 import {WithdrawalPeriod} from '../../services/WithdrawalPeriod';
 import {AboutTaxesDialogComponent} from '../about-taxes-dialog/about-taxes-dialog.component';
 import {AdvancedSettingsComponent} from '../advanced-settings/advanced-settings.component';
@@ -21,7 +21,8 @@ import {
   PropertyEditorComponent,
   PropertyEditorData,
   PropertyEditorType
-} from "../property-editor-component/property-editor.component";
+} from '../property-editor-component/property-editor.component';
+import {CookieService} from 'ngx-cookie-service';
 
 
 @Component({
@@ -39,6 +40,8 @@ import {
 })
 export class MainCardComponent implements DoCheck {
   private previousModel = CalculatorData.clone(TITANO_DATA);
+  private SETTINGS_COOKIE = 'settings-cookie';
+  private CURRENCY_COOKIE = 'currency-cookie';
   model = CalculatorData.clone(TITANO_DATA);
   withdrawalPeriods = WithdrawalPeriod.values;
   WithdrawalPeriod = WithdrawalPeriod; // damn TS DI
@@ -50,7 +53,6 @@ export class MainCardComponent implements DoCheck {
   private titanoAdvancedData = JSON.stringify(TITANO_DATA.advanced);
 
   set taxesCalculationEnabled(value: boolean) {
-    this.model.countryTaxesCalculationEnabled = value;
     if (value && !this.doNotShowAgain) {
       const ref = this.dialog.open(AboutTaxesDialogComponent, {
         disableClose: true,
@@ -64,13 +66,19 @@ export class MainCardComponent implements DoCheck {
         this.doNotShowAgain = doNotShowAgain;
       });
     }
+    this.model.countryTaxesCalculationEnabled = value;
+    this.saveSettings();
+  }
+
+  get taxesCalculationEnabled(): boolean {
+    return this.model.countryTaxesCalculationEnabled;
   }
 
   dateFormat = 'dd MMMM YYYY';
   shortDateFormat = 'dd MMM YY';
   expandedElement: BalanceRow | undefined;
   currencies = CoinMarketCapCurrencies.CURRENCIES;
-  currency = this.currencies[9];
+  currency = {...this.currencies[9]};
   fixedDesktopColumns = ['from', 'initialAmount', 'to', 'finalAmount'];
   fixedMobileColumns = ['to', 'finalAmount'];
   dataSource: BalanceRow[] = [];
@@ -80,18 +88,37 @@ export class MainCardComponent implements DoCheck {
     private estimatorService: EstimatorService,
     private calculatorService: CalculatorService,
     private cmcService: CoinMarketCapService,
+    private cookieService: CookieService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar, private window: Window
+    private snackBar: MatSnackBar,
+    private window: Window
   ) {
+    this.reloadSettings();
     this.fetchQuote();
     this.dataSource = this.oneYearBalance();
   }
 
   ngDoCheck(): void {
-    if (JSON.stringify(this.model) != JSON.stringify(this.previousModel)) { // ...
+    if (CalculatorData.toJSON(this.model) != CalculatorData.toJSON(this.previousModel)) { // ...
+      this.saveSettings();
       this.previousModel = CalculatorData.clone(this.model);
       this.dataSource = this.oneYearBalance();
     }
+  }
+
+  private reloadSettings(): void {
+    if (this.cookieService.check(this.SETTINGS_COOKIE)) {
+      this.model = CalculatorData.fromJSON(this.cookieService.get(this.SETTINGS_COOKIE));
+    }
+    if (this.cookieService.check(this.CURRENCY_COOKIE)) {
+      this.currency = JSON.parse(this.cookieService.get(this.CURRENCY_COOKIE)) as Currency;
+    }
+    this.titanoSettingsInUse = JSON.stringify(this.model.advanced) == this.titanoAdvancedData;
+  }
+
+  private saveSettings(): void {
+    this.cookieService.set(this.SETTINGS_COOKIE, CalculatorData.toJSON(this.model));
+    this.cookieService.set(this.CURRENCY_COOKIE, JSON.stringify(this.currency));
   }
 
   fetchQuote() {
@@ -159,13 +186,14 @@ export class MainCardComponent implements DoCheck {
       title: 'Select desired currency',
       label: 'Country Currency:',
       editorType: PropertyEditorType.OTHER,
-      currentValue: this.currency,
+      currentValue: this.currency.id,
       placeholder: 'country currency, i.e. EUR',
-      values: this.currencies,
-      renderer: (o: Currency) => o.symbol
+      values: CoinMarketCapCurrencies.CURRENCIES_IDS,
+      renderer: (o: number) => CoinMarketCapCurrencies.CURRENCIES.find(c => c.id == o)?.symbol || '???'
     }, value => {
-      if (this.currency != value) {
-        this.currency = value;
+      const currency = CoinMarketCapCurrencies.CURRENCIES.find(c => c.id == value)
+      if (currency != undefined && this.currency != currency) {
+        this.currency = currency;
         this.fetchQuote();
       }
     });
@@ -289,6 +317,7 @@ export class MainCardComponent implements DoCheck {
         this.titanoSettingsInUse = false;
         this.model.advanced = newSettings;
       }
+      this.saveSettings();
       // schedule a new estimation
       this.dataSource = this.oneYearBalance();
     });
@@ -317,7 +346,7 @@ export class MainCardComponent implements DoCheck {
       wb.Props.Author = 'https://twitter.com/polentino911';
       wb.Props.CreatedDate = new Date();
 
-      worksheet["!cols"] = [
+      worksheet['!cols'] = [
         {wch: this.count(rows, p => p.f)},
         {wch: this.count(rows, p => p.ia)},
         {wch: this.count(rows, p => p.t)},

@@ -19,8 +19,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTableModule} from '@angular/material/table';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BrowserModule} from '@angular/platform-browser';
-
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
+import {CookieService} from 'ngx-cookie-service';
 import {AppComponent} from './app.component';
 import {CalculatorService} from './services/calculator.service';
 import {CoinMarketCapService} from './services/CoinMarketCapService';
@@ -32,7 +33,7 @@ import {DownloadBreakdownComponent} from './ui/download-breakdown/download-break
 import {MainCardComponent} from './ui/main-card/main-card.component';
 import {PipesModule} from './ui/pipes/pipes.module';
 import {PropertyEditorComponent} from './ui/property-editor-component/property-editor.component';
-import {MatRadioModule} from "@angular/material/radio";
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import {MatRadioModule} from "@angular/material/radio";
   providers: [
     EstimatorService,
     CalculatorService,
-    CoinMarketCapService
+    CoinMarketCapService,
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

@@ -291,4 +291,6 @@ export class CoinMarketCapCurrencies {
       'slug': 'sovereign-bolivar'
     },
   ];
+
+  static CURRENCIES_IDS = CoinMarketCapCurrencies.CURRENCIES.map(c => c.id);
 }
