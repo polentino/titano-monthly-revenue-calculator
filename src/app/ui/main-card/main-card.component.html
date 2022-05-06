@@ -2,50 +2,53 @@
   <mat-card-title>Titano Periodic Revenue Calculator</mat-card-title>
   <mat-card-subtitle>Helps you estimate sustainable profit taking</mat-card-subtitle>
   <mat-card-content>
-    <div>
-      I would like to take a
-      <a (click)="editProfitType()" class="property-link">{{ProfitType.toDescription(model.profitType)}}</a>
-      of
-      <a *ngIf="model.profitType == ProfitType.FIXED_AMOUNT" (click)="editPeriodicAmountToWithdraw()"
-         class="property-link">{{model.desiredPeriodicAmountToWithdraw}}</a>
-      <a *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE" (click)="editRebasesPercentageToWithdraw()"
-         class="property-link">{{model.desiredPeriodicRebasePercentageToWithdraw}}%</a>
-      <a *ngIf="model.profitType == ProfitType.FIXED_AMOUNT" (click)="editCurrency()"
-         class="property-link">{{currency.symbol}}</a>
-      every
-      <a (click)="editWithdrawalPeriod()"
-         class="property-link">{{WithdrawalPeriod.toStringNoun(model.withdrawalPeriod)}}</a>
+    <div class="description">
+      <div>
+        I would like to take a
+        <a (click)="editProfitType()" class="property-link">{{ProfitType.toDescription(model.profitType)}}</a>
+        of
+        <a *ngIf="model.profitType == ProfitType.FIXED_AMOUNT" (click)="editPeriodicAmountToWithdraw()"
+           class="property-link">{{model.desiredPeriodicAmountToWithdraw}}</a>
+        <a *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE" (click)="editRebasesPercentageToWithdraw()"
+           class="property-link">{{model.desiredPeriodicRebasePercentageToWithdraw}}%</a>
+        <a *ngIf="model.profitType == ProfitType.FIXED_AMOUNT" (click)="editCurrency()"
+           class="property-link">{{currency.symbol}}</a>
+        every
+        <a (click)="editWithdrawalPeriod()"
+           class="property-link">{{WithdrawalPeriod.toStringNoun(model.withdrawalPeriod)}}</a>
 
-      <ng-container *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE">
-        , and my currency is
-        <a (click)="editCurrency()" class="property-link">{{currency.symbol}}</a>
-      </ng-container>
-      .
+        <ng-container *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE">
+          , and my currency is
+          <a (click)="editCurrency()" class="property-link">{{currency.symbol}}</a>
+        </ng-container>
+        .
+      </div>
+      <div>
+        My wallet contains
+        <a (click)="editInitialWallet()"
+           class="property-link">{{model.initialCryptoCapital}} {{model.advanced.name.toUpperCase()}}</a>
+        as of <a (click)="picker.open()"
+                 class="property-link">{{model.startDate | date: dateFormat}}
+        <input matInput class="invisible-input" [matDatepicker]="picker" [(ngModel)]="model.startDate"
+               [min]="november2021">
+      </a>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        , with unit price of
+        <a (click)="editCryptoPrice()"
+           class="property-link">{{model.cryptoPrice | numberFormat : 5}}
+          {{currency.symbol}}/{{model.advanced.name.toUpperCase()}}</a>
+        and I assume slippage fees of
+        <a (click)="editSlippageFees()" class="property-link">{{model.slippageFeesPct}}%</a>.
+      </div>
+      <mat-checkbox class="example-margin" [(ngModel)]="taxesCalculationEnabled" [color]="'primary'">
+        Also include my Country's taxes
+      </mat-checkbox>
+      <label [class]="model.countryTaxesCalculationEnabled ? 'enabled' : 'disabled'">, which amounts to
+        <a (click)="editCountryTaxes()" class="property-link">{{model.countryTaxes}}%</a>
+        of the <b>{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod)}}</b> gross income.
+      </label>
     </div>
-    <div>
-      My wallet contains
-      <a (click)="editInitialWallet()"
-         class="property-link">{{model.initialCryptoCapital}} {{model.advanced.name.toUpperCase()}}</a>
-      as of <a (click)="picker.open()"
-               class="property-link">{{model.startDate | date: dateFormat}}
-      <input matInput class="invisible-input" [matDatepicker]="picker" [(ngModel)]="model.startDate"
-             [min]="november2021">
-    </a>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>, with unit price of
-      <a (click)="editCryptoPrice()"
-         class="property-link">{{model.cryptoPrice | numberFormat : 5}}
-        {{currency.symbol}}/{{model.advanced.name.toUpperCase()}}</a>
-      and I assume slippage fees of
-      <a (click)="editSlippageFees()" class="property-link">{{model.slippageFeesPct}}%</a>.
-    </div>
-    <mat-checkbox class="example-margin" [(ngModel)]="taxesCalculationEnabled" [color]="'primary'">
-      Also include my Country's taxes
-    </mat-checkbox>
-    <label [class]="model.countryTaxesCalculationEnabled ? 'enabled' : 'disabled'">, which amounts to
-      <a (click)="editCountryTaxes()" class="property-link">{{model.countryTaxes}}%</a>
-      of the <b>{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod)}}</b> gross income.
-    </label>
 
     <p></p>
 
