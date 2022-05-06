@@ -1,17 +1,8 @@
-.mat-select {
-  margin-left: 10px;
-  width: 60px;
-}
-
 .property-link {
   background-color: lightsteelblue;
   border-radius: 10px;
   padding: 2px 10px 2px 10px;
   cursor: pointer;
-}
-
-mat-select {
-  background-color: #f2f2f2;
 }
 
 table {
@@ -50,20 +41,6 @@ label.enabled {
 
 label.disabled {
   opacity: 50%;
-}
-
-input {
-  width: 60px;
-  height: 0;
-  border: none;
-  -webkit-appearance: none;
-  -ms-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background: #f2f2f2;
-  padding: 12px;
-  border-radius: 3px;
-  font-size: 14px;
 }
 
 .settings-warn {
