@@ -3,6 +3,7 @@ import {formatDate} from '@angular/common';
 import {Component, DoCheck, Inject, LOCALE_ID} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {CookieService} from 'ngx-cookie-service';
 import * as XLSX from 'xlsx';
 import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
 import {CalculatorService} from '../../services/calculator.service';
@@ -22,7 +23,6 @@ import {
   PropertyEditorData,
   PropertyEditorType
 } from '../property-editor-component/property-editor.component';
-import {CookieService} from 'ngx-cookie-service';
 
 
 @Component({

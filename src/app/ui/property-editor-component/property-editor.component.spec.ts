@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {PropertyEditorComponent, PropertyEditorType} from './property-editor.component';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {PropertyEditorComponent, PropertyEditorType} from './property-editor.component';
 
 describe('PropertyEditorComponentComponent', () => {
   let component: PropertyEditorComponent;

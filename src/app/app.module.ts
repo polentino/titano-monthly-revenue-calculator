@@ -14,6 +14,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTableModule} from '@angular/material/table';
@@ -33,7 +34,6 @@ import {DownloadBreakdownComponent} from './ui/download-breakdown/download-break
 import {MainCardComponent} from './ui/main-card/main-card.component';
 import {PipesModule} from './ui/pipes/pipes.module';
 import {PropertyEditorComponent} from './ui/property-editor-component/property-editor.component';
-import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [

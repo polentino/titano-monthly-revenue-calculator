@@ -17,32 +17,28 @@ export interface CalculatorData {
 }
 
 export namespace CalculatorData {
-  const DATE_KEY: string = 'startDate';
-  const DATE_SUFFIX: string = 'date:';
+  const DATE_KEY = 'startDate';
+  const DATE_SUFFIX = 'date:';
 
   export function clone(data: CalculatorData): CalculatorData {
     return {...data, advanced: {...data.advanced}};
   }
 
   export function toJSON(data: CalculatorData): string {
-    return JSON.stringify(data, dateReplacer)
-  }
-
-  function dateReplacer(key: string, value: any): string {
-    if (value instanceof Date && key === DATE_KEY) {
-      return DATE_SUFFIX + value.toJSON();
-    }
-    return value;
+    return JSON.stringify(data, (key: string, value: any) => {
+      if (value instanceof Date && key === DATE_KEY) {
+        return DATE_SUFFIX + value.toJSON();
+      }
+      return value;
+    });
   }
 
   export function fromJSON(data: string): CalculatorData {
-    return JSON.parse(data, dateReviver) as CalculatorData;
-  }
-
-  function dateReviver(key: string, value: any): any {
-    if (key === DATE_KEY) {
-      return new Date(value.toString().replace(DATE_SUFFIX, ''));
-    }
-    return value;
+    return JSON.parse(data, (key: string, value: any) => {
+      if (key === DATE_KEY) {
+        return new Date(value.toString().replace(DATE_SUFFIX, ''));
+      }
+      return value;
+    }) as CalculatorData;
   }
 }
