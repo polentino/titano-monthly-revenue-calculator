@@ -13,7 +13,7 @@ export class CalculatorService {
     const cryptoPrice = data.cryptoPrice;
     const apy = data.advanced.periodAPY;
     const initialCapital = data.initialCryptoCapital;
-    const fees = (data.slippageFeesPct + data.advanced.contractSellFeesPct) / 100;
+    const fees = (data.slippageFeePct + data.advanced.contractSellFeesPct) / 100;
     const totalFees = fees * (!data.countryTaxesCalculationEnabled ? 1 : data.countryTaxes / 100);
 
     const iterations = WithdrawalPeriod.periodsInYear(data.withdrawalPeriod);

@@ -12,7 +12,7 @@ export class EstimatorService {
     const taxes = data.countryTaxesCalculationEnabled ? 100 / (100 - data.countryTaxes) : 1;
     const beforeTax = (data.desiredPeriodicAmountToWithdraw / data.cryptoPrice) * taxes;
     // 142,85 / (100 - 18) * 100 = 174,21 => amount that was subject to slippage
-    return beforeTax * 100 / (100 - (data.advanced.contractSellFeesPct + data.slippageFeesPct));
+    return beforeTax * 100 / (100 - (data.advanced.contractSellFeesPct + data.slippageFeePct));
   }
 
   daysNeeded(data: CalculatorData) {
@@ -113,7 +113,7 @@ export const TITANO_DATA: CalculatorData = {
   desiredPeriodicAmountToWithdraw: 1000,
   desiredPeriodicRebasePercentageToWithdraw: 50,
   startDate: new Date(),
-  slippageFeesPct: 1,
+  slippageFeePct: 1,
   initialCryptoCapital: 2000,
   cryptoPrice: 0.157907,
   countryTaxes: 30,

@@ -11,7 +11,7 @@ describe('EstimatorService', () => {
     desiredPeriodicAmountToWithdraw: 100,
     desiredPeriodicRebasePercentageToWithdraw: 0,
     startDate: new Date(),
-    slippageFeesPct: 2,
+    slippageFeePct: 2,
     initialCryptoCapital: 1000,
     cryptoPrice: 1, // made up value :)
     countryTaxes: 30,

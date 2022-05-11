@@ -12,7 +12,7 @@ describe('CalculatorService', () => {
     desiredPeriodicAmountToWithdraw: 0,
     desiredPeriodicRebasePercentageToWithdraw: 50,
     startDate: new Date(),
-    slippageFeesPct: 1,
+    slippageFeePct: 1,
     initialCryptoCapital: 2000,
     cryptoPrice: 1, // made up value :)
     countryTaxes: 30,

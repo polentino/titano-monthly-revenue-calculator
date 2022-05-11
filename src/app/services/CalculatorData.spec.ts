@@ -11,7 +11,7 @@ describe('CalculatorData', () => {
     desiredPeriodicAmountToWithdraw: 100,
     desiredPeriodicRebasePercentageToWithdraw: 50,
     startDate: firstDate,
-    slippageFeesPct: 2,
+    slippageFeePct: 2,
     initialCryptoCapital: 1000,
     cryptoPrice: 1, // made up value :)
     countryTaxes: 30,
@@ -29,7 +29,7 @@ describe('CalculatorData', () => {
     cloned.withdrawalPeriod = WithdrawalPeriod.MONTHLY;
     cloned.desiredPeriodicAmountToWithdraw = 0;
     cloned.startDate = secondDate;
-    cloned.slippageFeesPct = 0;
+    cloned.slippageFeePct = 0;
     cloned.initialCryptoCapital = 0;
     cloned.cryptoPrice = 0;
     cloned.countryTaxes = 0;
@@ -44,7 +44,7 @@ describe('CalculatorData', () => {
       expect(testData.withdrawalPeriod).toEqual(WithdrawalPeriod.WEEKLY);
       expect(testData.desiredPeriodicAmountToWithdraw).toEqual(100);
       expect(testData.startDate).toEqual(firstDate);
-      expect(testData.slippageFeesPct).toEqual(2);
+      expect(testData.slippageFeePct).toEqual(2);
       expect(testData.initialCryptoCapital).toEqual(1000);
       expect(testData.cryptoPrice).toEqual(1);
       expect(testData.countryTaxes).toEqual(30);
@@ -57,7 +57,7 @@ describe('CalculatorData', () => {
       expect(cloned.withdrawalPeriod).toEqual(WithdrawalPeriod.MONTHLY);
       expect(cloned.desiredPeriodicAmountToWithdraw).toEqual(0);
       expect(cloned.startDate).toEqual(secondDate);
-      expect(cloned.slippageFeesPct).toEqual(0);
+      expect(cloned.slippageFeePct).toEqual(0);
       expect(cloned.initialCryptoCapital).toEqual(0);
       expect(cloned.cryptoPrice).toEqual(0);
       expect(cloned.countryTaxes).toEqual(0);

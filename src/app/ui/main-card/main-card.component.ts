@@ -237,17 +237,17 @@ export class MainCardComponent implements DoCheck {
     }, value => this.model.cryptoPrice = value);
   }
 
-  editSlippageFees() {
+  editSlippageFee() {
     this.editProperty({
       editorType: PropertyEditorType.NUMBER,
-      title: 'Edit slippage fees (%)',
-      label: 'slippage fees',
+      title: 'Edit slippage fee (%)',
+      label: 'slippage fee',
       placeholder: 'i.e. 2(%)',
-      currentValue: this.model.slippageFeesPct,
+      currentValue: this.model.slippageFeePct,
       values: [],
       renderer: (o: number) => `${o}`,
       validator: (o: number) => o !== undefined && (o > 0 && o <= 100)
-    }, value => this.model.slippageFeesPct = value);
+    }, value => this.model.slippageFeePct = value);
   }
 
   editCountryTaxes() {

@@ -38,8 +38,8 @@
         <a (click)="editCryptoPrice()"
            class="property-link">{{model.cryptoPrice | numberFormat : 5}}
           {{currency.symbol}}/{{model.advanced.name.toUpperCase()}}</a>
-        and I assume slippage fees of
-        <a (click)="editSlippageFees()" class="property-link">{{model.slippageFeesPct}}%</a>.
+        and I assume the Exchange slippage fee of
+        <a (click)="editSlippageFee()" class="property-link">{{model.slippageFeePct}}%</a>.
       </div>
       <mat-checkbox class="example-margin" [(ngModel)]="taxesCalculationEnabled" [color]="'primary'">
         Also include my Country's taxes

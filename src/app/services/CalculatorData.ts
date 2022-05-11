@@ -8,7 +8,7 @@ export interface CalculatorData {
   desiredPeriodicAmountToWithdraw: number;
   desiredPeriodicRebasePercentageToWithdraw: number;
   startDate: Date;
-  slippageFeesPct: number;
+  slippageFeePct: number;
   initialCryptoCapital: number;
   cryptoPrice: number
   countryTaxes: number;
