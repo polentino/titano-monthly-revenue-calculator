@@ -1,11 +1,11 @@
 {
   "name": "titano-monthly-revenue-calculator",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "lint": "npx eslint ./src/ --fix",
-    "build": "ng build --aot --base-href='/titano-monthly-revenue-calculator/'",
+    "build": "ng build --aot --base-href='/titano-monthly-revenue-calculator/' --output-hashing none",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
