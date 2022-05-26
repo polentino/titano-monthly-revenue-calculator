@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
-import {CalculatorData} from "./CalculatorData";
-import {BalanceRow} from "./estimator.service";
-import {WithdrawalPeriod} from "./WithdrawalPeriod";
+import {Injectable} from '@angular/core';
+import {CalculatorData} from './CalculatorData';
+import {BalanceRow} from './estimator.service';
+import {WithdrawalPeriod} from './WithdrawalPeriod';
 
 
 @Injectable({providedIn: 'any'})

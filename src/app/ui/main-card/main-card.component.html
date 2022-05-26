@@ -50,171 +50,37 @@
       </label>
     </div>
 
-    <p></p>
+    <div echarts [loading]="chartLoading" [options]="chartOption"></div>
 
-    <mat-accordion>
-      <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title>Analysis Result</mat-panel-title>
-        </mat-expansion-panel-header>
-        <p *ngIf="model.profitType == ProfitType.FIXED_AMOUNT">
-          Starting from {{model.startDate | date: dateFormat}}, with a wallet
-          containing {{model.initialCryptoCapital}} {{model.advanced.name.toUpperCase()}}, if
-          you want to withdraw {{model.desiredPeriodicAmountToWithdraw}} {{currency.symbol}}
-          /{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod, true)}}
-          <b>{{model.countryTaxesCalculationEnabled ? ' after taxes' : ''}}</b>,
-          meaning {{periodicTitanoWithdrawal() | numberFormat}}
-          {{model.advanced.name.toUpperCase()}}/{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod, true)}}
-          gross, you will need to wait until <b>{{firstWithdrawalDate() | date: dateFormat}}</b>.
-        </p>
-        <p *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE">
-          Starting from {{model.startDate | date: dateFormat}}, with a wallet
-          containing {{model.initialCryptoCapital}} {{model.advanced.name.toUpperCase()}}, if
-          you want to withdraw {{model.desiredPeriodicRebasePercentageToWithdraw}}% of your rebases
-          every {{WithdrawalPeriod.toStringNoun(model.withdrawalPeriod)}}, in one year you will be taking profits for a
-          grand total of {{rebasesProfits() | scaleNumber}} {{currency.symbol}}.
-        </p>
-      </mat-expansion-panel>
+    <blockquote class="mat-elevation-z3 quote">
+      <div *ngIf="model.profitType == ProfitType.FIXED_AMOUNT">
+        <b>️Assuming current {{model.advanced.name.toUpperCase()}} price:</b>️
+        on {{dataSource[dataSource.length - 1].to | date: dateFormat}}
+        you will have withdrawn
+        {{estimatedOneYearProfit() | scaleNumber}} {{currency.symbol}}
+        and still
+        have {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} {{model.advanced.name.toUpperCase()}}
+        (worth
+        ~ {{dataSource[dataSource.length - 1].finalAmount * model.cryptoPrice | scaleNumber}} {{currency.symbol}}
+        )!
+        Note: click on the rows below to see the details.
+        <u><a (click)="download()" class="download-sheet">Click here to download the data as Excel sheet.</a></u>
+      </div>
+      <div *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE">
+        <b>️Assuming current {{model.advanced.name.toUpperCase()}} price:</b>️
+        on {{dataSource[dataSource.length - 1].to | date: dateFormat}}
+        you will have withdrawn rebases for a total grand of
+        {{rebasesProfits() | scaleNumber}} {{currency.symbol}}
+        and still
+        have {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} {{model.advanced.name.toUpperCase()}}
+        (worth
+        ~ {{dataSource[dataSource.length - 1].finalAmount * model.cryptoPrice | scaleNumber}} {{currency.symbol}}
+        )!
+        Note: click on the rows below to see the details.
+        <u><a (click)="download()" class="download-sheet">Click here to download the data as Excel sheet.</a></u>
+      </div>
+    </blockquote>
 
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>1Yr Profit and Wallet breakdown</mat-panel-title>
-        </mat-expansion-panel-header>
-        <div class="accordion-content">
-
-          <!-- desktop view -->
-          <div *ngIf="model.profitType == ProfitType.FIXED_AMOUNT" fxShow fxHide.lt-sm>
-            <b>️Assuming {{model.advanced.name.toUpperCase()}} price won't change:</b>️
-            on {{dataSource[dataSource.length - 1].to | date: dateFormat}},
-            by taking regular profits every {{WithdrawalPeriod.toStringNoun(model.withdrawalPeriod)}}{{optionalDays()}}
-            , you will have secured {{estimatedOneYearProfit() | scaleNumber}} {{currency.symbol}} and,
-            more importantly, <b>your {{model.advanced.name.toUpperCase()}} wallet will keep increasing up
-            to {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} {{model.advanced.name.toUpperCase()}}</b>
-            (~ {{dataSource[dataSource.length - 1].finalAmount * model.cryptoPrice | scaleNumber}} {{currency.symbol}})!
-            <u><a (click)="download()" class="download-sheet">Click here to download the data as Excel sheet.</a></u>
-          </div>
-          <div *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE" fxShow fxHide.lt-sm>
-            <b>️Assuming {{model.advanced.name.toUpperCase()}} price won't change:</b>️
-            on {{dataSource[dataSource.length - 1].to | date: dateFormat}},
-            by taking regular rebases profit
-            every {{WithdrawalPeriod.toStringNoun(model.withdrawalPeriod)}}{{optionalDays()}}, you will
-            have secured {{rebasesProfits() | scaleNumber}} {{currency.symbol}} and,
-            more importantly, <b>your {{model.advanced.name.toUpperCase()}} wallet will keep increasing up
-            to {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} {{model.advanced.name.toUpperCase()}}</b>
-            (~ {{dataSource[dataSource.length - 1].finalAmount * model.cryptoPrice | scaleNumber}} {{currency.symbol}})!
-            <u><a (click)="download()" class="download-sheet">Click here to download the data as Excel sheet.</a></u>
-          </div>
-          <table mat-table [dataSource]="dataSource" fxShow fxHide.lt-sm>
-
-            <ng-container matColumnDef="from" fxShow fxHide.lt-sm>
-              <th mat-header-cell *matHeaderCellDef>From</th>
-              <td mat-cell *matCellDef="let element">{{element.from | date: shortDateFormat}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="to">
-              <th mat-header-cell *matHeaderCellDef>To</th>
-              <td mat-cell *matCellDef="let row">{{row.to | date: shortDateFormat}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="initialAmount">
-              <th mat-header-cell *matHeaderCellDef>{{model.advanced.name.toUpperCase()}}</th>
-              <td mat-cell *matCellDef="let row">{{row.initialAmount | scaleNumber}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="finalAmount">
-              <th mat-header-cell *matHeaderCellDef>{{model.advanced.name.toUpperCase()}}</th>
-              <td mat-cell *matCellDef="let row">{{row.finalAmount | scaleNumber}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="value">
-              <th mat-header-cell *matHeaderCellDef>Value ({{currency.symbol}})</th>
-              <td mat-cell *matCellDef="let row">{{row.value | scaleNumber}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="profit">
-              <th mat-header-cell *matHeaderCellDef>Profit ({{currency.symbol}})</th>
-              <td mat-cell *matCellDef="let row">{{row.value | scaleNumber}}</td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="desktopColumns()"></tr>
-            <tr mat-row *matRowDef="let row; columns: desktopColumns();"></tr>
-          </table>
-
-          <!-- mobile view -->
-          <div *ngIf="model.profitType == ProfitType.FIXED_AMOUNT" fxHide fxShow.lt-sm>
-            <b>️Assuming {{model.advanced.name.toUpperCase()}} price won't change:</b>️
-            on {{dataSource[dataSource.length - 1].to | date: dateFormat}}
-            you will have withdrawn
-            {{estimatedOneYearProfit() | scaleNumber}} {{currency.symbol}}
-            and still
-            have {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} {{model.advanced.name.toUpperCase()}}
-            (worth
-            ~ {{dataSource[dataSource.length - 1].finalAmount * model.cryptoPrice | scaleNumber}} {{currency.symbol}}
-            )!
-            Note: click on the rows below to see the details.
-            <u><a (click)="download()" class="download-sheet">Touch here to download the data as Excel sheet.</a></u>
-          </div>
-          <div *ngIf="model.profitType == ProfitType.REBASE_PERCENTAGE" fxHide fxShow.lt-sm>
-            <b>️Assuming {{model.advanced.name.toUpperCase()}} price won't change:</b>️
-            on {{dataSource[dataSource.length - 1].to | date: dateFormat}}
-            you will have withdrawn rebases for a total grand of
-            {{rebasesProfits() | scaleNumber}} {{currency.symbol}}
-            and still
-            have {{dataSource[dataSource.length - 1].finalAmount | scaleNumber}} {{model.advanced.name.toUpperCase()}}
-            (worth
-            ~ {{dataSource[dataSource.length - 1].finalAmount * model.cryptoPrice | scaleNumber}} {{currency.symbol}}
-            )!
-            Note: click on the rows below to see the details.
-            <u><a (click)="download()" class="download-sheet">Touch here to download the data as Excel sheet.</a></u>
-          </div>
-          <table mat-table [dataSource]="dataSource" multiTemplateDataRows fxHide fxShow.lt-sm>
-
-            <ng-container matColumnDef="to">
-              <th mat-header-cell *matHeaderCellDef>Date</th>
-              <td mat-cell *matCellDef="let row">{{row.to | date: shortDateFormat}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="finalAmount">
-              <th mat-header-cell *matHeaderCellDef>{{model.advanced.name.toUpperCase()}}</th>
-              <td mat-cell *matCellDef="let row">{{row.finalAmount | scaleNumber}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="value">
-              <th mat-header-cell *matHeaderCellDef>Value ({{currency.symbol}})</th>
-              <td mat-cell *matCellDef="let row">{{row.value | scaleNumber}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="profit">
-              <th mat-header-cell *matHeaderCellDef>Profit ({{currency.symbol}})</th>
-              <td mat-cell *matCellDef="let row">{{row.value | scaleNumber}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="expandedDetail">
-              <td mat-cell *matCellDef="let row" [attr.colspan]="mobileColumns().length">
-                <div class="row-detail"
-                     [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
-                  During the period from {{row.from | date: shortDateFormat}} to {{row.to | date: shortDateFormat}} your
-                  crypto wallet, after withdrawing {{model.desiredPeriodicAmountToWithdraw}}
-                  {{currency.symbol}}/{{WithdrawalPeriod.toStringAdjective(model.withdrawalPeriod, true)}}, will
-                  contain {{row.finalAmount | numberFormat}} {{model.advanced.name.toUpperCase()}}, for a value
-                  of {{row.finalAmount * model.cryptoPrice | numberFormat}}{{currency.symbol}}.
-                </div>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="mobileColumns()"></tr>
-            <tr mat-row *matRowDef="let row; columns: mobileColumns();"
-                class="mobile-row"
-                [class.example-expanded-row]="expandedElement === row"
-                (click)="expandedElement = expandedElement === row ? null : row">
-            </tr>
-            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="details-row"></tr>
-          </table>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-
-    <p></p>
     <p *ngIf="titanoSettingsInUse">
       ⚠️NOTE⚠️ This site isn't affiliated in any way with TITANO.finance. Predictions presented here are not
       financial advice, and you must do your own due diligence before investing in any asset.

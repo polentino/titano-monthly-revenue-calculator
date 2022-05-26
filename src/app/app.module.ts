@@ -23,6 +23,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {CookieService} from 'ngx-cookie-service';
+import {NgxEchartsModule} from 'ngx-echarts';
 import {AppComponent} from './app.component';
 import {CalculatorService} from './services/calculator.service';
 import {CoinMarketCapService} from './services/CoinMarketCapService';
@@ -46,6 +47,7 @@ import {PropertyEditorComponent} from './ui/property-editor-component/property-e
     PropertyEditorComponent
   ],
   imports: [
+    NgxEchartsModule.forRoot({echarts: () => import('echarts')}),
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,

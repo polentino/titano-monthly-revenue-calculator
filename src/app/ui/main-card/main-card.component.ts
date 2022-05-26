@@ -3,6 +3,7 @@ import {formatDate} from '@angular/common';
 import {Component, DoCheck, Inject, LOCALE_ID} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {EChartsOption} from 'echarts';
 import {CookieService} from 'ngx-cookie-service';
 import * as XLSX from 'xlsx';
 import {AdvancedCalculatorData} from '../../services/AdvancedCalculatorData';
@@ -13,6 +14,7 @@ import {CoinMarketCapService} from '../../services/CoinMarketCapService';
 import {BalanceRow, EstimatorService, TITANO_DATA} from '../../services/estimator.service';
 import {ProfitType} from '../../services/ProfitType';
 import {WithdrawalPeriod} from '../../services/WithdrawalPeriod';
+import {ScaleNumber} from '../../utils/scale.number';
 import {AboutTaxesDialogComponent} from '../about-taxes-dialog/about-taxes-dialog.component';
 import {AdvancedSettingsComponent} from '../advanced-settings/advanced-settings.component';
 import {BuyMeABeerComponent} from '../buy-me-a-beer/buy-me-a-beer.component';
@@ -23,7 +25,6 @@ import {
   PropertyEditorData,
   PropertyEditorType
 } from '../property-editor-component/property-editor.component';
-
 
 @Component({
   selector: 'app-main-card',
@@ -51,6 +52,8 @@ export class MainCardComponent implements DoCheck {
   doNotShowAgain = false;
   november2021 = new Date(2021, 10, 1)
   private titanoAdvancedData = JSON.stringify(TITANO_DATA.advanced);
+  chartLoading = false;
+  chartOption: EChartsOption = {};
 
   set taxesCalculationEnabled(value: boolean) {
     if (value && !this.doNotShowAgain) {
@@ -95,14 +98,14 @@ export class MainCardComponent implements DoCheck {
   ) {
     this.reloadSettings();
     this.fetchQuote();
-    this.dataSource = this.oneYearBalance();
+    this.oneYearBalance();
   }
 
   ngDoCheck(): void {
     if (CalculatorData.toJSON(this.model) != CalculatorData.toJSON(this.previousModel)) { // ...
       this.saveSettings();
       this.previousModel = CalculatorData.clone(this.model);
-      this.dataSource = this.oneYearBalance();
+      this.oneYearBalance();
     }
   }
 
@@ -283,11 +286,54 @@ export class MainCardComponent implements DoCheck {
   }
 
   oneYearBalance() {
-    if (this.model.profitType == ProfitType.FIXED_AMOUNT) {
-      return this.estimatorService.oneYearBalance(this.model);
-    } else {
-      return this.calculatorService.oneYearBalance(this.model);
-    }
+    this.chartLoading = true;
+    this.dataSource = (this.model.profitType == ProfitType.FIXED_AMOUNT)
+      ? this.estimatorService.oneYearBalance(this.model)
+      : this.calculatorService.oneYearBalance(this.model);
+
+    const cryptoName = this.model.advanced.name.toUpperCase();
+    this.chartOption = {
+      // todo: enable zoom IFF there are multiple timeseries
+      // dataZoom: [
+      //   {
+      //     id: 'dataZoomX',
+      //     type: 'slider',
+      //     xAxisIndex: [0],
+      //     filterMode: 'filter'
+      //   },
+      //   {
+      //     id: 'dataZoomY',
+      //     type: 'slider',
+      //     yAxisIndex: [0],
+      //     filterMode: 'empty'
+      //   }
+      // ],
+      tooltip: {
+        show: true,
+        trigger: 'axis',
+        valueFormatter: value => {
+          const scaled = ScaleNumber.scale(value as number);
+          return `${scaled} ${cryptoName}`;
+        }
+      },
+      xAxis: {
+        type: 'time'
+      },
+      yAxis: {
+        type: 'value',
+        name: `${cryptoName} in wallet`,
+        axisLabel: {
+          // @ts-ignore
+          formatter: value => ScaleNumber.scale(value as number)
+        }
+      },
+      series: [{
+        data: this.dataSource.map(br => [br.to, br.initialAmount]),
+        type: 'line',
+        smooth: true
+      }]
+    };
+    this.chartLoading = false;
   }
 
   estimatedOneYearProfit() {
@@ -319,7 +365,7 @@ export class MainCardComponent implements DoCheck {
       }
       this.saveSettings();
       // schedule a new estimation
-      this.dataSource = this.oneYearBalance();
+      this.oneYearBalance();
     });
   }
 
